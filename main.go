@@ -1,6 +1,6 @@
 package main
 
-import "example/pkg"
+import "go-emas/pkg"
 
 var POPULATION_SIZE = 4
 
