@@ -1,6 +1,20 @@
 package agent
 
-import "strconv"
+import (
+	"go-emas/pkg/common_types"
+	"go-emas/pkg/tag_calculator"
+
+	"strconv"
+)
+
+type IAgent interface {
+	Solution() common_types.Solution
+	ActionTag() common_types.ActionTag
+	Energy() common_types.Energy
+	ModifyEnergy(energyDelta common_types.Energy)
+	Execute()
+	String() string
+}
 
 // Agent struct
 type Agent struct {
