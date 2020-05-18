@@ -17,7 +17,13 @@ func (b *mockPopulationFactory) CreatePopulation(populationSize int) (map[int]ag
 	return populationGeneratorMock(populationSize)
 }
 
-type mockAgent struct{}
+type mockAgent struct {
+	id int
+}
+
+func (m *mockAgent) ID() int {
+	return m.id
+}
 
 func (m *mockAgent) Solution() common_types.Solution {
 	var result common_types.Solution
@@ -66,14 +72,13 @@ func TestEnvironmentInit(t *testing.T) {
 	})
 
 	t.Run("Test positive values", func(t *testing.T) {
-
 		testParams := []int{1, 5, 21}
 
 		populationGeneratorMock = func(populationSize int) (map[int]agent.IAgent, error) {
 
 			population := make(map[int]agent.IAgent)
 			for i := 0; i < populationSize; i++ {
-				population[i+1] = &mockAgent{}
+				population[i+1] = &mockAgent{i + 1}
 			}
 			return population, nil
 		}
@@ -93,5 +98,86 @@ func TestEnvironmentInit(t *testing.T) {
 			}
 		}
 	})
+}
 
+func TestDeleteFromPopulation(t *testing.T) {
+
+	populationSize := 5
+
+	populationFactory := &mockPopulationFactory{}
+	populationGeneratorMock = func(populationSize int) (map[int]agent.IAgent, error) {
+
+		population := make(map[int]agent.IAgent)
+		for i := 0; i < populationSize; i++ {
+			population[i+1] = &mockAgent{i + 1}
+		}
+		return population, nil
+	}
+
+	t.Run("Normal DeleteFromPopulation", func(t *testing.T) {
+
+		env, err := environment.NewEnvironment(populationSize, populationFactory)
+
+		testID := 3
+		err = env.DeleteFromPopulation(testID)
+
+		if err != nil {
+			t.Errorf("Got unexpected err: %s", err)
+		}
+
+	})
+
+	t.Run("Normal DeleteFromPopulation", func(t *testing.T) {
+
+		env, err := environment.NewEnvironment(populationSize, populationFactory)
+
+		testID := 10
+		err = env.DeleteFromPopulation(testID)
+
+		if err == nil {
+			t.Errorf("Expected error but not received")
+		}
+
+	})
+}
+
+func TestAddToPopulation(t *testing.T) {
+
+	populationSize := 5
+
+	populationFactory := &mockPopulationFactory{}
+	populationGeneratorMock = func(populationSize int) (map[int]agent.IAgent, error) {
+
+		population := make(map[int]agent.IAgent)
+		for i := 0; i < populationSize; i++ {
+			population[i+1] = &mockAgent{i + 1}
+		}
+		return population, nil
+	}
+
+	t.Run("Add element to list which do not exists", func(t *testing.T) {
+
+		env, err := environment.NewEnvironment(populationSize, populationFactory)
+
+		newAgent := &mockAgent{10}
+
+		err = env.AddToPopulation(newAgent)
+
+		if err != nil {
+			t.Errorf("Got unexpected err: %s", err)
+		}
+	})
+
+	t.Run("Add element to list which already exists", func(t *testing.T) {
+
+		env, err := environment.NewEnvironment(populationSize, populationFactory)
+
+		newAgent := &mockAgent{3}
+
+		err = env.AddToPopulation(newAgent)
+
+		if err == nil {
+			t.Errorf("Expected error but not received")
+		}
+	})
 }

@@ -68,8 +68,18 @@ func (e Environment) DeleteFromPopulation(id int) error {
 	if ok {
 		delete(e.population, id)
 	} else {
-		return errors.New("Element with " + strconv.Itoa(id) + "id do not exist")
+		return errors.New("Element with " + strconv.Itoa(id) + " id do not exist")
 	}
+	return nil
+}
+
+// AddToPopulation adds new record to population
+func (e Environment) AddToPopulation(agent agent.IAgent) error {
+	_, ok := e.population[agent.ID()]
+	if ok {
+		return errors.New("Element with " + strconv.Itoa(agent.ID()) + " id already exists")
+	}
+	e.population[agent.ID()] = agent
 	return nil
 }
 
@@ -79,7 +89,13 @@ func (e Environment) ShowMap() {
 }
 
 func (e Environment) tagAgents() {
+	for _, agent := range e.population {
+		agent.Tag()
+	}
 }
 
 func (e Environment) executeActions() {
+	for _, agent := range e.population {
+		agent.Execute()
+	}
 }

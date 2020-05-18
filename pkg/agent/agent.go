@@ -13,6 +13,7 @@ type IAgent interface {
 	ModifyEnergy(energyDelta common_types.Energy)
 	Execute()
 	String() string
+	ID() int
 }
 
 // Agent struct
