@@ -4,18 +4,20 @@ import (
 	"errors"
 	"fmt"
 	"go-emas/pkg/agent"
-	"go-emas/pkg/agent_factory"
+	"go-emas/pkg/population_factory"
+	"strconv"
 )
 
 // Environment is struct representing environment
 type Environment struct {
-	population   map[int]agent.Agent
-	agentFactory *agent_factory.IAgnetFactory
+	populationSize int
+	population     map[int]agent.Agent
 }
 
 // NewEnvironment creates new Environment object
-func NewEnvironment(size int, agentFactory *agent_factory.IAgnetFactory) *Environment {
-	var e = Environment{size, agentFactory}
+func NewEnvironment(size int, populationFactory population_factory.IPopulationFactory) *Environment {
+	population, _ := populationFactory.CreatePopulation(size)
+	var e = Environment{size, population}
 	return &e
 }
 
@@ -33,8 +35,9 @@ func (e Environment) DeleteFromPopulation(id int) error {
 	if ok {
 		delete(e.population, id)
 	} else {
-		return errors.New("Element with %d id do not exist", id)
+		return errors.New("Element with " + strconv.Itoa(id) + "id do not exist")
 	}
+	return nil
 }
 
 // ShowMap is a helper used to display current state of a population
