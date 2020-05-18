@@ -40,8 +40,8 @@ func (e Environment) Start() error {
 	for {
 		i++
 
-		e.tagAgents()
-		e.executeActions()
+		// e.tagAgents()
+		// e.executeActions()
 
 		fmt.Println("Running...")
 
@@ -89,9 +89,9 @@ func (e Environment) ShowMap() {
 }
 
 func (e Environment) tagAgents() {
-	for _, agent := range e.population {
-		agent.Tag()
-	}
+	// for _, agent := range e.population {
+	// 	agent.Tag()
+	// }
 }
 
 func (e Environment) executeActions() {
