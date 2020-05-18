@@ -5,20 +5,53 @@ import (
 	"fmt"
 	"go-emas/pkg/agent"
 	"go-emas/pkg/population_factory"
+	"go-emas/pkg/stopper"
 	"strconv"
 )
 
 // Environment is struct representing environment
 type Environment struct {
-	populationSize int
-	population     map[int]agent.Agent
+	population map[int]agent.IAgent
+	stopper    stopper.IStopper
 }
 
 // NewEnvironment creates new Environment object
-func NewEnvironment(size int, populationFactory population_factory.IPopulationFactory) *Environment {
-	population, _ := populationFactory.CreatePopulation(size)
-	var e = Environment{size, population}
-	return &e
+func NewEnvironment(populationSize int, populationFactory population_factory.IPopulationFactory) (*Environment, error) {
+
+	population, err := populationFactory.CreatePopulation(populationSize)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var e = Environment{
+		population: population,
+		stopper:    stopper.NewIterationBasedStopper(),
+	}
+
+	return &e, nil
+}
+
+// Start is an entry point method
+func (e Environment) Start() error {
+
+	var i int = 0
+
+	for {
+		i++
+
+		e.tagAgents()
+		e.executeActions()
+
+		fmt.Println("Running...")
+
+		if e.stopper.Stop(i) {
+			fmt.Println("Stop condition met")
+			break
+		}
+	}
+
+	return nil
 }
 
 // PopulationSize return current size of poulation
@@ -43,4 +76,10 @@ func (e Environment) DeleteFromPopulation(id int) error {
 // ShowMap is a helper used to display current state of a population
 func (e Environment) ShowMap() {
 	fmt.Println("[Environment] ", e.population)
+}
+
+func (e Environment) tagAgents() {
+}
+
+func (e Environment) executeActions() {
 }

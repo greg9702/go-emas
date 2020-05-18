@@ -5,11 +5,17 @@ import (
 	"go-emas/pkg/population_factory"
 )
 
-var POPULATION_SIZE = 4
+const populationSize = 4
 
 func main() {
 	var populationFactory = population_factory.NewBasicPopulationFactroy()
 
-	var env environment.Environment = *environment.NewEnvironment(POPULATION_SIZE, populationFactory)
+	env, err := environment.NewEnvironment(populationSize, populationFactory)
+
+	if err != nil {
+		panic("Environment setup error")
+	}
+
 	env.ShowMap()
+	env.Start()
 }
