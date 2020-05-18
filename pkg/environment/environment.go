@@ -1,47 +1,43 @@
 package environment
 
 import (
+	"errors"
 	"fmt"
 	"go-emas/pkg/agent"
+	"go-emas/pkg/agent_factory"
 )
 
+// Environment is struct representing environment
 type Environment struct {
-	initialPopulationSize int
-	population            map[int]agent.Agent
+	population   map[int]agent.Agent
+	agentFactory *agent_factory.IAgnetFactory
 }
 
-func NewEnvironment(size int) Environment {
-	var e = Environment{size, make(map[int]agent.Agent)}
-	e.initMap(size)
-	return e
+// NewEnvironment creates new Environment object
+func NewEnvironment(size int, agentFactory *agent_factory.IAgnetFactory) *Environment {
+	var e = Environment{size, agentFactory}
+	return &e
 }
 
+// PopulationSize return current size of poulation
+func (e Environment) PopulationSize() int {
+	// TODO something like pupulationMutex?
+	return len(e.population)
+}
+
+// DeleteFromPopulation used to delete agent from map by id
+// passing as callback to Agent
+func (e Environment) DeleteFromPopulation(id int) error {
+	// TODO use pupulationMutex
+	_, ok := e.population[id]
+	if ok {
+		delete(e.population, id)
+	} else {
+		return errors.New("Element with %d id do not exist", id)
+	}
+}
+
+// ShowMap is a helper used to display current state of a population
 func (e Environment) ShowMap() {
 	fmt.Println("[Environment] ", e.population)
-}
-
-func (e Environment) initMap(size int) {
-	for i := 0; i < size; i++ {
-		e.population[i] = agent.NewAgent(i)
-	}
-}
-
-func (e Environment) deleteFromMap(id int) {
-
-	if _, ok := e.population[id]; ok {
-		delete(e.population, id)
-		fmt.Println("[Environment] Deleted element", id)
-	} else {
-		fmt.Println("[Environment] Not found element", id)
-	}
-}
-
-func (e Environment) RunExecutor() {
-	fmt.Println("[Environment] Executor started")
-
-	for _, val := range e.population {
-		val.Run(e.deleteFromMap)
-	}
-
-	fmt.Println("[Environment] Executor finished")
 }

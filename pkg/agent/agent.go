@@ -1,24 +1,12 @@
 package agent
 
-import (
-	"fmt"
-)
-
+// Agent struct
 type Agent struct {
 	id int
 }
 
-func NewAgent(id int) Agent {
-	var a = Agent{id}
-	return a
-}
-
-func (a Agent) Run(deleter func(int)) {
-
-	if a.id == 3 {
-		fmt.Println("[Agent] Agent", a.id, "assigned for deletion by itself")
-		deleter(a.id)
-	} else {
-		fmt.Println("[Agent] Agent", a.id, "executed")
-	}
+// NewAgent creates new Agent object
+func NewAgent(id int) *Agent {
+	a := Agent{id}
+	return &a
 }
