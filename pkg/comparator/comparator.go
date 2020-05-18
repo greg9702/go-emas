@@ -7,7 +7,7 @@ import (
 
 // IComparator is an interface for comparators
 type IAgentComparator interface {
-	Compare(firstAgent agent.Agent, secondAgent agent.Agent) bool
+	Compare(firstAgent agent.IAgent, secondAgent agent.IAgent) bool
 }
 
 // Agent with higher solution wins
@@ -20,6 +20,6 @@ func NewLinearAgentComparator() LinearAgentComparator {
 	return lac
 }
 
-func (lac LinearAgentComparator) Compare(firstAgent agent.Agent, secondAgent agent.Agent) bool {
+func (lac LinearAgentComparator) Compare(firstAgent agent.IAgent, secondAgent agent.IAgent) bool {
 	return lac.fitnessCalculator.CalculateFitness(firstAgent.Solution()) > lac.fitnessCalculator.CalculateFitness(secondAgent.Solution())
 }

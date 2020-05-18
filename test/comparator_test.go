@@ -2,21 +2,57 @@ package test
 
 import (
 	"go-emas/pkg/agent"
+	"go-emas/pkg/common_types"
 	"go-emas/pkg/comparator"
 	"testing"
 )
 
+type mockAgent struct {
+	solution common_types.Solution
+}
+
+func (m *mockAgent) Id() common_types.AgentId {
+	var result common_types.AgentId
+	return result
+}
+
+func (m *mockAgent) Solution() common_types.Solution {
+	return m.solution
+}
+
+func (m *mockAgent) ActionTag() common_types.ActionTag {
+	var result common_types.ActionTag
+	return result
+}
+
+func (m *mockAgent) Energy() common_types.Energy {
+	var result common_types.Energy
+	return result
+}
+
+func (m *mockAgent) ModifyEnergy(energyDelta common_types.Energy) {
+}
+
+func (m *mockAgent) Tag() {
+}
+
+func (m *mockAgent) Execute() {
+}
+
+func (m *mockAgent) String() string {
+	return ""
+}
 func TestLinearAgentComparator(t *testing.T) {
 	sut := comparator.NewLinearAgentComparator()
 
 	t.Run("Test base cases", func(t *testing.T) {
 		testParams := []struct {
-			firstAgent  agent.Agent
-			secondAgent agent.Agent
+			firstAgent  agent.IAgent
+			secondAgent agent.IAgent
 			result      bool
 		}{
-			{*agent.NewAgent(0, 1), *agent.NewAgent(1, 2), false},
-			{*agent.NewAgent(0, 2), *agent.NewAgent(1, 1), true},
+			{&mockAgent{1}, &mockAgent{2}, false},
+			{&mockAgent{4}, &mockAgent{3}, true},
 		}
 
 		for _, param := range testParams {

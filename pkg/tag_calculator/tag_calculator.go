@@ -1,23 +1,19 @@
 package tag_calculator
 
-type AgentTag string
+import "go-emas/pkg/common_types"
+
+type ActionTag string
 
 const REPRODUCTION_THRESHOLD = 80
-
-const (
-	Death        AgentTag = "Death"
-	Reproduction          = "Reproduction"
-	Fight                 = "Fight"
-)
 
 type TagCalculator struct {
 }
 
-func (tc TagCalculator) DummyCalculate(energy int) AgentTag {
+func (tc TagCalculator) Calculate(energy int) common_types.ActionTag {
 	if energy == 0 {
-		return Death
-	} else if energy > REPRODUCTION_THRESHOLD {
-		return Reproduction
+		return common_types.Death
+	} else if energy >= REPRODUCTION_THRESHOLD {
+		return common_types.Reproduction
 	}
-	return Fight
+	return common_types.Fight
 }
