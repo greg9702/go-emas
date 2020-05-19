@@ -1,13 +1,13 @@
 package comparator
 
 import (
-	"go-emas/pkg/agent"
 	"go-emas/pkg/fitness_calculator"
+	"go-emas/pkg/i_agent"
 )
 
 // IComparator is an interface for comparators
 type IAgentComparator interface {
-	Compare(firstAgent agent.IAgent, secondAgent agent.IAgent) bool
+	Compare(firstAgent i_agent.IAgent, secondAgent i_agent.IAgent) bool
 }
 
 // Agent with higher solution wins
@@ -20,6 +20,6 @@ func NewLinearAgentComparator() LinearAgentComparator {
 	return lac
 }
 
-func (lac LinearAgentComparator) Compare(firstAgent agent.IAgent, secondAgent agent.IAgent) bool {
+func (lac LinearAgentComparator) Compare(firstAgent i_agent.IAgent, secondAgent i_agent.IAgent) bool {
 	return lac.fitnessCalculator.CalculateFitness(firstAgent.Solution()) > lac.fitnessCalculator.CalculateFitness(secondAgent.Solution())
 }
