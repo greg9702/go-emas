@@ -1,9 +1,9 @@
 package test
 
 import (
-	"go-emas/pkg/agent"
 	"go-emas/pkg/common_types"
 	"go-emas/pkg/comparator"
+	"go-emas/pkg/i_agent"
 	"testing"
 )
 
@@ -47,8 +47,8 @@ func TestLinearAgentComparator(t *testing.T) {
 
 	t.Run("Test base cases", func(t *testing.T) {
 		testParams := []struct {
-			firstAgent  agent.IAgent
-			secondAgent agent.IAgent
+			firstAgent  i_agent.IAgent
+			secondAgent i_agent.IAgent
 			result      bool
 		}{
 			{&MockAgent{1}, &MockAgent{2}, false},

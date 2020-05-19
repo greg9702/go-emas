@@ -21,7 +21,8 @@ func NewBasicPopulationFactroy() *BasicPopulationFactroy {
 func (b *BasicPopulationFactroy) CreatePopulation(populationSize int) (map[int]agent.Agent, error) {
 	var population = make(map[int]agent.Agent)
 	for i := 0; i < populationSize; i++ {
-		population[i] = *agent.NewAgent(i)
+		// TODO
+		// population[i] = *agent.NewAgent(i)
 	}
 	return population, nil
 }
