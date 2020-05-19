@@ -2,6 +2,7 @@ package agent
 
 import (
 	"go-emas/pkg/common_types"
+	"go-emas/pkg/tag_calculator"
 
 	"strconv"
 )
@@ -18,14 +19,19 @@ type IAgent interface {
 }
 
 type Agent struct {
-	id        common_types.AgentId
-	solution  common_types.Solution
-	actionTag common_types.ActionTag
-	energy    common_types.Energy
+	id            common_types.AgentId
+	solution      common_types.Solution
+	actionTag     common_types.ActionTag
+	energy        common_types.Energy
+	tagCalculator tag_calculator.ITagCalulator
 }
 
-func NewAgent(id common_types.AgentId, solution common_types.Solution, actionTag common_types.ActionTag, energy common_types.Energy) *Agent {
-	a := Agent{id, solution, actionTag, energy}
+func NewAgent(id common_types.AgentId,
+	solution common_types.Solution,
+	actionTag common_types.ActionTag,
+	energy common_types.Energy,
+	tagCalculator tag_calculator.ITagCalulator) *Agent {
+	a := Agent{id, solution, actionTag, energy, tagCalculator}
 	return &a
 }
 
@@ -51,4 +57,20 @@ func (a *Agent) ModifyEnergy(energyDelta common_types.Energy) {
 		return
 	}
 	a.energy += energyDelta
+}
+
+func (a *Agent) Tag() {
+	a.actionTag = a.tagCalculator.Calculate(a.energy)
+}
+
+func (a *Agent) Fight() {
+
+}
+
+func (a *Agent) Reproduce() {
+
+}
+
+func (a *Agent) Die() {
+
 }

@@ -7,39 +7,39 @@ import (
 	"testing"
 )
 
-type mockAgent struct {
+type MockAgent struct {
 	solution common_types.Solution
 }
 
-func (m *mockAgent) Id() common_types.AgentId {
+func (m *MockAgent) Id() common_types.AgentId {
 	var result common_types.AgentId
 	return result
 }
 
-func (m *mockAgent) Solution() common_types.Solution {
+func (m *MockAgent) Solution() common_types.Solution {
 	return m.solution
 }
 
-func (m *mockAgent) ActionTag() common_types.ActionTag {
+func (m *MockAgent) ActionTag() common_types.ActionTag {
 	var result common_types.ActionTag
 	return result
 }
 
-func (m *mockAgent) Energy() common_types.Energy {
+func (m *MockAgent) Energy() common_types.Energy {
 	var result common_types.Energy
 	return result
 }
 
-func (m *mockAgent) ModifyEnergy(energyDelta common_types.Energy) {
+func (m *MockAgent) ModifyEnergy(energyDelta common_types.Energy) {
 }
 
-func (m *mockAgent) Tag() {
+func (m *MockAgent) Tag() {
 }
 
-func (m *mockAgent) Execute() {
+func (m *MockAgent) Execute() {
 }
 
-func (m *mockAgent) String() string {
+func (m *MockAgent) String() string {
 	return ""
 }
 func TestLinearAgentComparator(t *testing.T) {
@@ -51,8 +51,8 @@ func TestLinearAgentComparator(t *testing.T) {
 			secondAgent agent.IAgent
 			result      bool
 		}{
-			{&mockAgent{1}, &mockAgent{2}, false},
-			{&mockAgent{4}, &mockAgent{3}, true},
+			{&MockAgent{1}, &MockAgent{2}, false},
+			{&MockAgent{4}, &MockAgent{3}, true},
 		}
 
 		for _, param := range testParams {

@@ -11,8 +11,16 @@ const SOLUTION common_types.Solution = 10
 const ACTION_TAG common_types.ActionTag = common_types.Fight
 const ENERGY common_types.Energy = 50
 
+type MockTagCalculator struct {
+	result common_types.ActionTag
+}
+
+func (m MockTagCalculator) Calculate(common_types.Energy) common_types.ActionTag {
+	return m.result
+}
+
 func TestAgent(t *testing.T) {
-	sut := agent.NewAgent(ID, SOLUTION, ACTION_TAG, ENERGY)
+	sut := agent.NewAgent(ID, SOLUTION, ACTION_TAG, ENERGY, MockTagCalculator{common_types.Fight})
 
 	t.Run("Test modifying energy", func(t *testing.T) {
 		testParams := []struct {

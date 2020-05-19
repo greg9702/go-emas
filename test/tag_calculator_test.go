@@ -6,12 +6,12 @@ import (
 	"testing"
 )
 
-func TestTagCalculationDummy(t *testing.T) {
-	sut := tag_calculator.TagCalculator{}
+func TestTagCalculation(t *testing.T) {
+	sut := tag_calculator.NewTagCalculator()
 
 	t.Run("Test base cases", func(t *testing.T) {
 		testParams := []struct {
-			energy int
+			energy common_types.Energy
 			tag    common_types.ActionTag
 		}{
 			{0, common_types.Death},
