@@ -3,7 +3,6 @@ package environment
 import (
 	"errors"
 	"fmt"
-	"go-emas/pkg/agent"
 	"go-emas/pkg/common_types"
 	"go-emas/pkg/i_agent"
 	"go-emas/pkg/population_factory"
@@ -23,7 +22,7 @@ type IEnvironment interface {
 
 // Environment is struct representing environment
 type Environment struct {
-	population map[int]agent.IAgent
+	population map[int]i_agent.IAgent
 	stopper    stopper.IStopper
 }
 
@@ -86,12 +85,12 @@ func (e Environment) DeleteFromPopulation(id int) error {
 }
 
 // AddToPopulation adds new record to population
-func (e Environment) AddToPopulation(agent agent.IAgent) error {
-	_, ok := e.population[agent.ID()]
+func (e Environment) AddToPopulation(agent i_agent.IAgent) error {
+	_, ok := e.population[int(agent.Id())]
 	if ok {
-		return errors.New("Element with " + strconv.Itoa(agent.ID()) + " id already exists")
+		return errors.New("Element with " + strconv.Itoa(int(agent.Id())) + " id already exists")
 	}
-	e.population[agent.ID()] = agent
+	e.population[int(agent.Id())] = agent
 	return nil
 }
 
