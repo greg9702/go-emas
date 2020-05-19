@@ -1,10 +1,12 @@
 package population_factory
 
-import "go-emas/pkg/agent"
+import (
+	"go-emas/pkg/i_agent"
+)
 
 // IPopulationFactory interface for population factories
 type IPopulationFactory interface {
-	CreatePopulation(populationSize int) (map[int]agent.IAgent, error)
+	CreatePopulation(populationSize int) (map[int]i_agent.IAgent, error)
 }
 
 // BasicPopulationFactroy is a basic variant of IPopulationFactory
@@ -18,10 +20,11 @@ func NewBasicPopulationFactroy() *BasicPopulationFactroy {
 }
 
 // CreatePopulation is used to creating initial population
-func (b *BasicPopulationFactroy) CreatePopulation(populationSize int) (map[int]agent.IAgent, error) {
-	var population = make(map[int]agent.IAgent)
-	// for i := 0; i < populationSize; i++ {
-	// 	population[i] = agent.NewAgent(i, i)
-	// }
+func (b *BasicPopulationFactroy) CreatePopulation(populationSize int) (map[int]i_agent.IAgent, error) {
+	var population = make(map[int]i_agent.IAgent)
+	for i := 0; i < populationSize; i++ {
+		// TODO
+		// population[i] = *agent.NewAgent(i)
+	}
 	return population, nil
 }
