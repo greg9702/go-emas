@@ -11,6 +11,16 @@ import (
 
 const LOSS_PENALTY common_types.Energy = 20
 
+type IAgent interface {
+	Solution() common_types.Solution
+	ActionTag() common_types.ActionTag
+	Energy() common_types.Energy
+	ModifyEnergy(energyDelta common_types.Energy)
+	Execute()
+	String() string
+	ID() int
+}
+
 type Agent struct {
 	id                    common_types.AgentId
 	solution              common_types.Solution
