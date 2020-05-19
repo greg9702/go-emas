@@ -4,10 +4,21 @@ import (
 	"errors"
 	"fmt"
 	"go-emas/pkg/agent"
+	"go-emas/pkg/common_types"
 	"go-emas/pkg/population_factory"
 	"go-emas/pkg/stopper"
 	"strconv"
 )
+
+// IEnvironment interface for environments
+type IEnvironment interface {
+	Start() error
+	PopulationSize() int
+	DeleteFromPopulation(id int) error
+	AddToPopulation(agent agent.IAgent) error
+	ShowMap()
+	GetAgentByTag(tag common_types.ActionTag) agent.IAgent
+}
 
 // Environment is struct representing environment
 type Environment struct {
