@@ -1,13 +1,10 @@
 package common_types
 
-type AgentId int
+// Solution is used as solution value
 type Solution int
-type Fitness int
-type Energy int
-type ActionTag string
 
 const (
-	Death        ActionTag = "Death"
-	Reproduction           = "Reproduction"
-	Fight                  = "Fight"
+	Death        string = "Death"
+	Reproduction string = "Reproduction"
+	Fight        string = "Fight"
 )

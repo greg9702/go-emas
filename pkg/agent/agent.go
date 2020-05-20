@@ -10,19 +10,11 @@ import (
 	"strconv"
 )
 
-const LOSS_PENALTY common_types.Energy = 20
-const MUTATION_RATE float32 = 0.5
-const ENERGY_PERCENTAGE_TRANSFERRED_TO_CHILD float32 = 0.5
+const lossPenalty int = 20
+const mnutationRate float32 = 0.5
 
-type IAgent interface {
-	Solution() common_types.Solution
-	ActionTag() common_types.ActionTag
-	Energy() common_types.Energy
-	ModifyEnergy(energyDelta common_types.Energy)
-	Execute()
-	String() string
-	ID() int
-}
+// percent of current parent energy passed to a child as inital energy value
+const energyPercentageToChild float32 = 0.5
 
 type Agent struct {
 	id                    common_types.AgentId
