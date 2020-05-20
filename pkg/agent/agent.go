@@ -16,84 +16,103 @@ const mnutationRate float32 = 0.5
 // percent of current parent energy passed to a child as inital energy value
 const energyPercentageToChild float32 = 0.5
 
+// Agent struct represent an Agent
 type Agent struct {
-	id                    common_types.AgentId
+	id                    int64
 	solution              common_types.Solution
-	actionTag             common_types.ActionTag
-	energy                common_types.Energy
+	actionTag             string
+	energy                int
 	tagCalculator         tag_calculator.ITagCalulator
 	agentComparator       comparator.IAgentComparator
 	randomizer            randomizer.IRandomizer
-	getAgentByTagCallback func(tag common_types.ActionTag) i_agent.IAgent
-	deleteAgentCallback   func(id common_types.AgentId)
+	getAgentByTagCallback func(tag string) i_agent.IAgent
+	deleteAgentCallback   func(id int64)
 	addAgentCallback      func(newAgent i_agent.IAgent)
 }
 
-func NewAgent(id common_types.AgentId,
-	solution common_types.Solution,
-	actionTag common_types.ActionTag,
-	energy common_types.Energy,
-	tagCalculator tag_calculator.ITagCalulator,
-	agentComparator comparator.IAgentComparator,
-	randomizer randomizer.IRandomizer,
-	getAgentByTagCallback func(tag common_types.ActionTag) i_agent.IAgent,
-	deleteAgentCallback func(id common_types.AgentId),
-	addAgentCallback func(newAgent i_agent.IAgent)) i_agent.IAgent {
+// NewAgent creates new Agent object
+func NewAgent(id int64, solution common_types.Solution, actionTag string, energy int, tagCalculator tag_calculator.ITagCalulator,
+	agentComparator comparator.IAgentComparator, randomizer randomizer.IRandomizer, getAgentByTagCallback func(tag string) i_agent.IAgent,
+	deleteAgentCallback func(id int64), addAgentCallback func(newAgent i_agent.IAgent)) i_agent.IAgent {
 	a := Agent{id, solution, actionTag, energy, tagCalculator, agentComparator, randomizer, getAgentByTagCallback, deleteAgentCallback, addAgentCallback}
 	return &a
 }
 
-func (a Agent) Id() common_types.AgentId {
+// ID returns id
+func (a *Agent) ID() int64 {
 	return a.id
 }
 
-func (a Agent) Solution() common_types.Solution {
+// Solution returns agent solution
+func (a *Agent) Solution() common_types.Solution {
 	return a.solution
 }
 
-func (a Agent) ActionTag() common_types.ActionTag {
+// ActionTag returns agent tag
+func (a *Agent) ActionTag() string {
 	return a.actionTag
 }
 
-func (a Agent) Energy() common_types.Energy {
+// Energy returns agent energy
+func (a *Agent) Energy() int {
 	return a.energy
 }
 
-// TODO remove cast if possible
-func (a Agent) String() string {
+// String used to display agent struct using fmt
+func (a *Agent) String() string {
 	return "Agent: " + strconv.Itoa(int(a.id)) + " solution: " + strconv.Itoa(int(a.solution))
 }
 
-func (a *Agent) ModifyEnergy(energyDelta common_types.Energy) {
+// ModifyEnergy is used to modify agent energy
+func (a *Agent) ModifyEnergy(energyDelta int) {
 	if a.energy+energyDelta < 0 {
 		return
 	}
 	a.energy += energyDelta
 }
 
+// Tag returns tag of an agent
 func (a *Agent) Tag() {
 	a.actionTag = a.tagCalculator.Calculate(a.energy)
 }
 
-func (a *Agent) Fight() {
-	var rival i_agent.IAgent = a.getAgentByTagCallback(common_types.Fight)
-	var won bool = a.agentComparator.Compare(a, rival)
-	if won {
-		a.ModifyEnergy(LOSS_PENALTY)
-		rival.ModifyEnergy(-LOSS_PENALTY)
-	} else {
-		a.ModifyEnergy(-LOSS_PENALTY)
-		rival.ModifyEnergy(LOSS_PENALTY)
+// Execute used to execute action on an agent
+func (a *Agent) Execute() {
+	switch at := a.actionTag; at {
+	case "Death":
+		a.die()
+	case "Reproduction":
+		a.reproduce()
+	case "Fight":
+		a.fight()
 	}
 }
 
-func (a *Agent) Reproduce() {
+// Fight is used to perform fight action
+func (a *Agent) fight() {
+	var rival i_agent.IAgent = a.getAgentByTagCallback(common_types.Fight)
+	var won bool = a.agentComparator.Compare(a, rival)
+	if won {
+		a.ModifyEnergy(lossPenalty)
+		rival.ModifyEnergy(-lossPenalty)
+	} else {
+		a.ModifyEnergy(-lossPenalty)
+		rival.ModifyEnergy(lossPenalty)
+	}
+}
+
+// Reproduce is used to perform fight action
+func (a *Agent) reproduce() {
 	// TODO get unique id - from environment?
-	var newAgentId common_types.AgentId = a.id + 50
-	solutionDelta, _ := a.randomizer.RandInt(-int(float32(a.solution)*MUTATION_RATE), int(float32(a.solution)*MUTATION_RATE))
+	// TODO environment.addAgent should generate it
+	var newAgentID int64 = a.id + 50
+
+	solutionDelta, _ := a.randomizer.RandInt(-int(float32(a.solution)*mnutationRate), int(float32(a.solution)*mnutationRate))
+
 	var newAgentSolution common_types.Solution = a.solution + common_types.Solution(solutionDelta)
-	var newAgentEnergy common_types.Energy = common_types.Energy(float32(a.energy) * ENERGY_PERCENTAGE_TRANSFERRED_TO_CHILD)
-	child := NewAgent(newAgentId,
+	var newAgentEnergy int = int(float32(a.energy) * energyPercentageToChild) // TODO this must be int!
+
+	child := NewAgent(newAgentID,
 		newAgentSolution,
 		common_types.Fight,
 		newAgentEnergy,
@@ -103,21 +122,11 @@ func (a *Agent) Reproduce() {
 		a.getAgentByTagCallback,
 		a.deleteAgentCallback,
 		a.addAgentCallback)
+
 	a.addAgentCallback(child)
 	a.ModifyEnergy(-newAgentEnergy)
 }
 
-func (a *Agent) Die() {
+func (a *Agent) die() {
 	a.deleteAgentCallback(a.id)
-}
-
-func (a *Agent) Execute() {
-	switch at := a.actionTag; at {
-	case "Death":
-		a.Die()
-	case "Reproduction":
-		a.Reproduce()
-	case "Fight":
-		a.Fight()
-	}
 }

@@ -7,10 +7,10 @@ import (
 	"testing"
 )
 
-const ID common_types.AgentId = 0
-const SOLUTION common_types.Solution = 10
-const ACTION_TAG common_types.ActionTag = common_types.Fight
-const ENERGY common_types.Energy = 50
+const ID int64 = 0
+const solution common_types.Solution = 10
+const actionTag string = common_types.Fight
+const energy int = 50
 
 type MockAgentComparator struct {
 	result bool
@@ -21,7 +21,7 @@ func (m MockAgentComparator) Compare(firstAgent i_agent.IAgent, secondAgent i_ag
 }
 
 type MockTagCalculator struct {
-	result common_types.ActionTag
+	result string
 }
 
 type MockRandomizer struct {
@@ -32,25 +32,26 @@ func (mr MockRandomizer) RandInt(min int, max int) (int, error) {
 	return mr.result, nil
 }
 
-func (m MockTagCalculator) Calculate(common_types.Energy) common_types.ActionTag {
+func (m MockTagCalculator) Calculate(energy int) string {
 	return m.result
 }
 
-func mockGetAgentByTagEmpty(tag common_types.ActionTag) i_agent.IAgent {
+func mockGetAgentByTagEmpty(tag string) i_agent.IAgent {
 	return nil
 }
 
-func mockGetAgentByTag(tag common_types.ActionTag) i_agent.IAgent {
-	rivalId := ID + 1
-	rivalSolution := SOLUTION + 10
-	rival := agent.NewAgent(rivalId, rivalSolution, ACTION_TAG, ENERGY, MockTagCalculator{common_types.Fight}, MockAgentComparator{true}, MockRandomizer{2}, mockGetAgentByTagEmpty, mockDeleteAgent, mockAddAgent)
+func mockGetAgentByTag(tag string) i_agent.IAgent {
+	rivalID := ID + 1
+	rivalSolution := solution + 10
+	rival := agent.NewAgent(rivalID, rivalSolution, actionTag, energy, MockTagCalculator{common_types.Fight},
+		MockAgentComparator{true}, MockRandomizer{2}, mockGetAgentByTagEmpty, mockDeleteAgent, mockAddAgent)
 	return rival
 }
 
 // todo replace with mock.Called
 var agentDeleted bool = false
 
-func mockDeleteAgent(common_types.AgentId) {
+func mockDeleteAgent(id int64) {
 	agentDeleted = true
 }
 
@@ -61,7 +62,7 @@ func mockAddAgent(newAgent i_agent.IAgent) {
 	agentAdded = true
 }
 
-func expectFight(t *testing.T, sut i_agent.IAgent, expectedEnergyAfterFight common_types.Energy) {
+func expectFight(t *testing.T, sut i_agent.IAgent, expectedEnergyAfterFight int) {
 	energyAfterFight := sut.Energy()
 
 	if energyAfterFight != expectedEnergyAfterFight {
@@ -70,12 +71,13 @@ func expectFight(t *testing.T, sut i_agent.IAgent, expectedEnergyAfterFight comm
 }
 
 func TestAgent(t *testing.T) {
-	sut := agent.NewAgent(ID, SOLUTION, ACTION_TAG, ENERGY, MockTagCalculator{common_types.Fight}, MockAgentComparator{false}, MockRandomizer{2}, mockGetAgentByTag, mockDeleteAgent, mockAddAgent)
+	sut := agent.NewAgent(ID, solution, actionTag, energy, MockTagCalculator{common_types.Fight}, MockAgentComparator{false},
+		MockRandomizer{2}, mockGetAgentByTag, mockDeleteAgent, mockAddAgent)
 
 	t.Run("Test modifying energy", func(t *testing.T) {
 		testParams := []struct {
-			energyDelta common_types.Energy
-			finalEnergy common_types.Energy
+			energyDelta int
+			finalEnergy int
 		}{
 			{0, 50},
 			{20, 70},
@@ -96,7 +98,8 @@ func TestAgent(t *testing.T) {
 		sut.Execute()
 		expectFight(t, sut, 30)
 
-		sut := agent.NewAgent(ID, SOLUTION, ACTION_TAG, ENERGY, MockTagCalculator{common_types.Fight}, MockAgentComparator{true}, MockRandomizer{2}, mockGetAgentByTag, mockDeleteAgent, mockAddAgent)
+		sut := agent.NewAgent(ID, solution, actionTag, energy, MockTagCalculator{common_types.Fight}, MockAgentComparator{true},
+			MockRandomizer{2}, mockGetAgentByTag, mockDeleteAgent, mockAddAgent)
 		sut.Execute()
 		expectFight(t, sut, 70)
 	})
@@ -105,22 +108,23 @@ func TestAgent(t *testing.T) {
 
 func expectAgentDeath(t *testing.T, agent i_agent.IAgent) {
 	if agentDeleted == false {
-		t.Errorf("Error - agent with id: %d has not been deleted", agent.Id())
+		t.Errorf("Error - agent with id: %d has not been deleted", agent.ID())
 	}
 	agentDeleted = false
 }
 
 func TestAgentGoingToDie(t *testing.T) {
-	sut := agent.NewAgent(ID, SOLUTION, common_types.Death, ENERGY, MockTagCalculator{common_types.Death}, MockAgentComparator{false}, MockRandomizer{2}, mockGetAgentByTag, mockDeleteAgent, mockAddAgent)
+	sut := agent.NewAgent(ID, solution, common_types.Death, energy, MockTagCalculator{common_types.Death}, MockAgentComparator{false},
+		MockRandomizer{2}, mockGetAgentByTag, mockDeleteAgent, mockAddAgent)
 	t.Run("Test death", func(t *testing.T) {
 		sut.Execute()
 		expectAgentDeath(t, sut)
 	})
 }
 
-func expectAgentMutation(t *testing.T, agent i_agent.IAgent, finalEnergy common_types.Energy) {
+func expectAgentMutation(t *testing.T, agent i_agent.IAgent, finalEnergy int) {
 	if agentAdded == false {
-		t.Errorf("Error - agent with id: %d has not been added", agent.Id())
+		t.Errorf("Error - agent with id: %d has not been added", agent.ID())
 	}
 	agentAdded = false
 
@@ -130,11 +134,12 @@ func expectAgentMutation(t *testing.T, agent i_agent.IAgent, finalEnergy common_
 }
 
 func TestAgentGoingToReproduce(t *testing.T) {
-	var energy common_types.Energy = 80
-	sut := agent.NewAgent(ID, SOLUTION, common_types.Reproduction, energy, MockTagCalculator{common_types.Reproduction}, MockAgentComparator{false}, MockRandomizer{2}, mockGetAgentByTag, mockDeleteAgent, mockAddAgent)
+	var energy int = 80
+	sut := agent.NewAgent(ID, solution, common_types.Reproduction, energy, MockTagCalculator{common_types.Reproduction}, MockAgentComparator{false},
+		MockRandomizer{2}, mockGetAgentByTag, mockDeleteAgent, mockAddAgent)
 	t.Run("Test mutation", func(t *testing.T) {
 		sut.Execute()
-		var expectedEnergyAfterMutation common_types.Energy = 40
+		var expectedEnergyAfterMutation int = 40
 		expectAgentMutation(t, sut, expectedEnergyAfterMutation)
 	})
 }

@@ -11,8 +11,8 @@ type MockAgent struct {
 	solution common_types.Solution
 }
 
-func (m *MockAgent) Id() common_types.AgentId {
-	var result common_types.AgentId
+func (m *MockAgent) ID() int64 {
+	var result int64
 	return result
 }
 
@@ -20,17 +20,17 @@ func (m *MockAgent) Solution() common_types.Solution {
 	return m.solution
 }
 
-func (m *MockAgent) ActionTag() common_types.ActionTag {
-	var result common_types.ActionTag
+func (m *MockAgent) ActionTag() string {
+	var result string
 	return result
 }
 
-func (m *MockAgent) Energy() common_types.Energy {
-	var result common_types.Energy
+func (m *MockAgent) Energy() int {
+	var result int
 	return result
 }
 
-func (m *MockAgent) ModifyEnergy(energyDelta common_types.Energy) {
+func (m *MockAgent) ModifyEnergy(energyDelta int) {
 }
 
 func (m *MockAgent) Tag() {

@@ -3,7 +3,6 @@ package environment
 import (
 	"errors"
 	"fmt"
-	"go-emas/pkg/common_types"
 	"go-emas/pkg/i_agent"
 	"go-emas/pkg/population_factory"
 	"go-emas/pkg/stopper"
@@ -14,15 +13,15 @@ import (
 type IEnvironment interface {
 	Start() error
 	PopulationSize() int
-	DeleteFromPopulation(id int) error
+	DeleteFromPopulation(id int64) error
 	AddToPopulation(agent i_agent.IAgent) error
 	ShowMap()
-	GetAgentByTag(tag common_types.ActionTag) i_agent.IAgent
+	GetAgentByTag(tag string) i_agent.IAgent
 }
 
 // Environment is struct representing environment
 type Environment struct {
-	population map[int]i_agent.IAgent
+	population map[int64]i_agent.IAgent
 	stopper    stopper.IStopper
 }
 
@@ -73,24 +72,24 @@ func (e Environment) PopulationSize() int {
 
 // DeleteFromPopulation used to delete agent from map by id
 // passing as callback to Agent
-func (e Environment) DeleteFromPopulation(id int) error {
+func (e Environment) DeleteFromPopulation(id int64) error {
 	// TODO use pupulationMutex
 	_, ok := e.population[id]
 	if ok {
 		delete(e.population, id)
 	} else {
-		return errors.New("Element with " + strconv.Itoa(id) + " id do not exist")
+		return errors.New("Element with " + strconv.FormatInt(id, 10) + " id do not exist")
 	}
 	return nil
 }
 
 // AddToPopulation adds new record to population
 func (e Environment) AddToPopulation(agent i_agent.IAgent) error {
-	_, ok := e.population[int(agent.Id())]
+	_, ok := e.population[agent.ID()]
 	if ok {
-		return errors.New("Element with " + strconv.Itoa(int(agent.Id())) + " id already exists")
+		return errors.New("Element with " + strconv.FormatInt(agent.ID(), 10) + " id already exists")
 	}
-	e.population[int(agent.Id())] = agent
+	e.population[agent.ID()] = agent
 	return nil
 }
 

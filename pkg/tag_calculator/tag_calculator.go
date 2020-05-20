@@ -2,19 +2,20 @@ package tag_calculator
 
 import "go-emas/pkg/common_types"
 
-type ActionTag string
+const reproductionTreshold = 80
 
-const REPRODUCTION_THRESHOLD = 80
-
+// ITagCalulator is an interface for tag calculators
 type ITagCalulator interface {
-	Calculate(common_types.Energy) common_types.ActionTag
+	Calculate(energy int) string
 }
 
+// TagCalculator is a tag calculator
 type TagCalculator struct {
 }
 
 var instantiated *TagCalculator = nil
 
+// NewTagCalculator creates new TagCalculator object
 func NewTagCalculator() *TagCalculator {
 	if instantiated == nil {
 		instantiated = new(TagCalculator)
@@ -22,10 +23,11 @@ func NewTagCalculator() *TagCalculator {
 	return instantiated
 }
 
-func (tc TagCalculator) Calculate(energy common_types.Energy) common_types.ActionTag {
+// Calculate is used to calculate action for passed energy value
+func (tc TagCalculator) Calculate(energy int) string {
 	if energy == 0 {
 		return common_types.Death
-	} else if energy >= REPRODUCTION_THRESHOLD {
+	} else if energy >= reproductionTreshold {
 		return common_types.Reproduction
 	}
 	return common_types.Fight

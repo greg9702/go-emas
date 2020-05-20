@@ -9,19 +9,19 @@ import (
 )
 
 // This helps in assigning mock at the runtime instead of compile time
-var populationGeneratorMock func(populationSize int) (map[int]i_agent.IAgent, error)
+var populationGeneratorMock func(populationSize int) (map[int64]i_agent.IAgent, error)
 
 type mockPopulationFactory struct{}
 
-func (b *mockPopulationFactory) CreatePopulation(populationSize int) (map[int]i_agent.IAgent, error) {
+func (b *mockPopulationFactory) CreatePopulation(populationSize int) (map[int64]i_agent.IAgent, error) {
 	return populationGeneratorMock(populationSize)
 }
 
 type mockAgent struct {
-	id common_types.AgentId
+	id int64
 }
 
-func (m *mockAgent) Id() common_types.AgentId {
+func (m *mockAgent) ID() int64 {
 	return m.id
 }
 
@@ -30,17 +30,17 @@ func (m *mockAgent) Solution() common_types.Solution {
 	return result
 }
 
-func (m *mockAgent) ActionTag() common_types.ActionTag {
-	var result common_types.ActionTag
+func (m *mockAgent) ActionTag() string {
+	var result string
 	return result
 }
 
-func (m *mockAgent) Energy() common_types.Energy {
-	var result common_types.Energy
+func (m *mockAgent) Energy() int {
+	var result int
 	return result
 }
 
-func (m *mockAgent) ModifyEnergy(energyDelta common_types.Energy) {
+func (m *mockAgent) ModifyEnergy(energyDelta int) {
 }
 
 func (m *mockAgent) Execute() {
@@ -59,7 +59,7 @@ func TestEnvironmentInit(t *testing.T) {
 
 	t.Run("0 or negative populationSize", func(t *testing.T) {
 
-		populationGeneratorMock = func(populationSize int) (map[int]i_agent.IAgent, error) {
+		populationGeneratorMock = func(populationSize int) (map[int64]i_agent.IAgent, error) {
 			return nil, errors.New("0 or negative populationSize")
 		}
 
@@ -77,11 +77,11 @@ func TestEnvironmentInit(t *testing.T) {
 	t.Run("Test positive values", func(t *testing.T) {
 		testParams := []int{1, 5, 21}
 
-		populationGeneratorMock = func(populationSize int) (map[int]i_agent.IAgent, error) {
+		populationGeneratorMock = func(populationSize int) (map[int64]i_agent.IAgent, error) {
 
-			population := make(map[int]i_agent.IAgent)
+			population := make(map[int64]i_agent.IAgent)
 			for i := 0; i < populationSize; i++ {
-				population[i+1] = &mockAgent{common_types.AgentId(i + 1)}
+				population[int64(i+1)] = &mockAgent{int64(i + 1)}
 			}
 			return population, nil
 		}
@@ -108,11 +108,11 @@ func TestDeleteFromPopulation(t *testing.T) {
 	populationSize := 5
 
 	populationFactory := &mockPopulationFactory{}
-	populationGeneratorMock = func(populationSize int) (map[int]i_agent.IAgent, error) {
+	populationGeneratorMock = func(populationSize int) (map[int64]i_agent.IAgent, error) {
 
-		population := make(map[int]i_agent.IAgent)
+		population := make(map[int64]i_agent.IAgent)
 		for i := 0; i < populationSize; i++ {
-			population[i+1] = &mockAgent{common_types.AgentId(i + 1)}
+			population[int64(i+1)] = &mockAgent{int64(i + 1)}
 		}
 		return population, nil
 	}
@@ -121,7 +121,7 @@ func TestDeleteFromPopulation(t *testing.T) {
 
 		env, err := environment.NewEnvironment(populationSize, populationFactory)
 
-		testID := 3
+		var testID int64 = 3
 		err = env.DeleteFromPopulation(testID)
 
 		if err != nil {
@@ -134,7 +134,7 @@ func TestDeleteFromPopulation(t *testing.T) {
 
 		env, err := environment.NewEnvironment(populationSize, populationFactory)
 
-		testID := 10
+		var testID int64 = 10
 		err = env.DeleteFromPopulation(testID)
 
 		if err == nil {
@@ -149,11 +149,11 @@ func TestAddToPopulation(t *testing.T) {
 	populationSize := 5
 
 	populationFactory := &mockPopulationFactory{}
-	populationGeneratorMock = func(populationSize int) (map[int]i_agent.IAgent, error) {
+	populationGeneratorMock = func(populationSize int) (map[int64]i_agent.IAgent, error) {
 
-		population := make(map[int]i_agent.IAgent)
+		population := make(map[int64]i_agent.IAgent)
 		for i := 0; i < populationSize; i++ {
-			population[i+1] = &mockAgent{common_types.AgentId(i + 1)}
+			population[int64(i+1)] = &mockAgent{int64(i + 1)}
 		}
 		return population, nil
 	}
