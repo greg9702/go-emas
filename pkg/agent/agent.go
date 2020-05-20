@@ -31,9 +31,16 @@ type Agent struct {
 }
 
 // NewAgent creates new Agent object
-func NewAgent(id int64, solution common_types.Solution, actionTag string, energy int, tagCalculator tag_calculator.ITagCalulator,
-	agentComparator comparator.IAgentComparator, randomizer randomizer.IRandomizer, getAgentByTagCallback func(tag string) i_agent.IAgent,
-	deleteAgentCallback func(id int64), addAgentCallback func(newAgent i_agent.IAgent)) i_agent.IAgent {
+func NewAgent(
+	id int64,
+	solution common_types.Solution,
+	actionTag string, energy int,
+	tagCalculator tag_calculator.ITagCalulator,
+	agentComparator comparator.IAgentComparator,
+	randomizer randomizer.IRandomizer,
+	getAgentByTagCallback func(tag string) i_agent.IAgent,
+	deleteAgentCallback func(id int64),
+	addAgentCallback func(newAgent i_agent.IAgent)) i_agent.IAgent {
 	a := Agent{id, solution, actionTag, energy, tagCalculator, agentComparator, randomizer, getAgentByTagCallback, deleteAgentCallback, addAgentCallback}
 	return &a
 }

@@ -17,7 +17,7 @@ func NewLinearFitnessCalculator() LinearFitnessCalculator {
 }
 
 // CalculateFitness calculate fitness value for passed soultion argument
-func (flc LinearFitnessCalculator) CalculateFitness(solution common_types.Solution) int {
+func (flc *LinearFitnessCalculator) CalculateFitness(solution common_types.Solution) int {
 	// TODO this cast cannot be used like this here
 	return int(solution)
 }

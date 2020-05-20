@@ -43,7 +43,7 @@ func NewEnvironment(populationSize int, populationFactory population_factory.IPo
 }
 
 // Start is an entry point method
-func (e Environment) Start() error {
+func (e *Environment) Start() error {
 
 	var i int = 0
 
@@ -65,14 +65,14 @@ func (e Environment) Start() error {
 }
 
 // PopulationSize return current size of poulation
-func (e Environment) PopulationSize() int {
+func (e *Environment) PopulationSize() int {
 	// TODO something like pupulationMutex?
 	return len(e.population)
 }
 
 // DeleteFromPopulation used to delete agent from map by id
 // passing as callback to Agent
-func (e Environment) DeleteFromPopulation(id int64) error {
+func (e *Environment) DeleteFromPopulation(id int64) error {
 	// TODO use pupulationMutex
 	_, ok := e.population[id]
 	if ok {
@@ -84,7 +84,7 @@ func (e Environment) DeleteFromPopulation(id int64) error {
 }
 
 // AddToPopulation adds new record to population
-func (e Environment) AddToPopulation(agent i_agent.IAgent) error {
+func (e *Environment) AddToPopulation(agent i_agent.IAgent) error {
 	_, ok := e.population[agent.ID()]
 	if ok {
 		return errors.New("Element with " + strconv.FormatInt(agent.ID(), 10) + " id already exists")
@@ -94,17 +94,17 @@ func (e Environment) AddToPopulation(agent i_agent.IAgent) error {
 }
 
 // ShowMap is a helper used to display current state of a population
-func (e Environment) ShowMap() {
+func (e *Environment) ShowMap() {
 	fmt.Println("[Environment] ", e.population)
 }
 
-func (e Environment) tagAgents() {
+func (e *Environment) tagAgents() {
 	// for _, agent := range e.population {
 	// 	agent.Tag()
 	// }
 }
 
-func (e Environment) executeActions() {
+func (e *Environment) executeActions() {
 	for _, agent := range e.population {
 		agent.Execute()
 	}

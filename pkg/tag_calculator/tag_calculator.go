@@ -24,7 +24,7 @@ func NewTagCalculator() *TagCalculator {
 }
 
 // Calculate is used to calculate action for passed energy value
-func (tc TagCalculator) Calculate(energy int) string {
+func (tc *TagCalculator) Calculate(energy int) string {
 	if energy == 0 {
 		return common_types.Death
 	} else if energy >= reproductionTreshold {
