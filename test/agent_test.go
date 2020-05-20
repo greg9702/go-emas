@@ -35,8 +35,15 @@ func mockGetAgentByTagEmpty(tag common_types.ActionTag) i_agent.IAgent {
 func mockGetAgentByTag(tag common_types.ActionTag) i_agent.IAgent {
 	rivalId := ID + 1
 	rivalSolution := SOLUTION + 10
-	rival := agent.NewAgent(rivalId, rivalSolution, ACTION_TAG, ENERGY, MockTagCalculator{common_types.Fight}, MockAgentComparator{true}, mockGetAgentByTagEmpty)
+	rival := agent.NewAgent(rivalId, rivalSolution, ACTION_TAG, ENERGY, MockTagCalculator{common_types.Fight}, MockAgentComparator{true}, mockGetAgentByTagEmpty, mockDeleteAgent)
 	return rival
+}
+
+// todo replace with mock.Called
+var agentDeleted bool = false
+
+func mockDeleteAgent(common_types.AgentId) {
+	agentDeleted = true
 }
 
 func expectFight(t *testing.T, sut i_agent.IAgent, expectedEnergyAfterFight common_types.Energy) {
@@ -47,8 +54,15 @@ func expectFight(t *testing.T, sut i_agent.IAgent, expectedEnergyAfterFight comm
 	}
 }
 
+func expectAgentDeath(t *testing.T, agent i_agent.IAgent) {
+	if agentDeleted == false {
+		t.Errorf("Error - agent with id: %d has not been deleted", agent.Id())
+	}
+	agentDeleted = false
+}
+
 func TestAgent(t *testing.T) {
-	sut := agent.NewAgent(ID, SOLUTION, ACTION_TAG, ENERGY, MockTagCalculator{common_types.Fight}, MockAgentComparator{false}, mockGetAgentByTag)
+	sut := agent.NewAgent(ID, SOLUTION, ACTION_TAG, ENERGY, MockTagCalculator{common_types.Fight}, MockAgentComparator{false}, mockGetAgentByTag, mockDeleteAgent)
 
 	t.Run("Test modifying energy", func(t *testing.T) {
 		testParams := []struct {
@@ -70,13 +84,21 @@ func TestAgent(t *testing.T) {
 		}
 	})
 
-	t.Run("Test won fight", func(t *testing.T) {
+	t.Run("Test fight", func(t *testing.T) {
 		sut.Execute()
 		expectFight(t, sut, 30)
 
-		sut := agent.NewAgent(ID, SOLUTION, ACTION_TAG, ENERGY, MockTagCalculator{common_types.Fight}, MockAgentComparator{true}, mockGetAgentByTag)
+		sut := agent.NewAgent(ID, SOLUTION, ACTION_TAG, ENERGY, MockTagCalculator{common_types.Fight}, MockAgentComparator{true}, mockGetAgentByTag, mockDeleteAgent)
 		sut.Execute()
 		expectFight(t, sut, 70)
 	})
 
+}
+
+func TestAgentGoingToDie(t *testing.T) {
+	sut := agent.NewAgent(ID, SOLUTION, common_types.Death, ENERGY, MockTagCalculator{common_types.Death}, MockAgentComparator{false}, mockGetAgentByTag, mockDeleteAgent)
+	t.Run("Test death", func(t *testing.T) {
+		sut.Execute()
+		expectAgentDeath(t, sut)
+	})
 }

@@ -29,6 +29,7 @@ type Agent struct {
 	tagCalculator         tag_calculator.ITagCalulator
 	agentComparator       comparator.IAgentComparator
 	getAgentByTagCallback func(tag common_types.ActionTag) i_agent.IAgent
+	deleteAgentCallback   func(id common_types.AgentId)
 }
 
 func NewAgent(id common_types.AgentId,
@@ -37,8 +38,9 @@ func NewAgent(id common_types.AgentId,
 	energy common_types.Energy,
 	tagCalculator tag_calculator.ITagCalulator,
 	agentComparator comparator.IAgentComparator,
-	getAgentByTagCallback func(tag common_types.ActionTag) i_agent.IAgent) i_agent.IAgent {
-	a := Agent{id, solution, actionTag, energy, tagCalculator, agentComparator, getAgentByTagCallback}
+	getAgentByTagCallback func(tag common_types.ActionTag) i_agent.IAgent,
+	deleteAgentCallback func(id common_types.AgentId)) i_agent.IAgent {
+	a := Agent{id, solution, actionTag, energy, tagCalculator, agentComparator, getAgentByTagCallback, deleteAgentCallback}
 	return &a
 }
 
@@ -91,13 +93,13 @@ func (a *Agent) Reproduce() {
 }
 
 func (a *Agent) Die() {
-
+	a.deleteAgentCallback(a.id)
 }
 
 func (a *Agent) Execute() {
 	switch at := a.actionTag; at {
 	case "Death":
-		a.Fight()
+		a.Die()
 	case "Reproduction":
 		a.Reproduce()
 	case "Fight":
