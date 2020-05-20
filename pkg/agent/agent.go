@@ -4,12 +4,15 @@ import (
 	"go-emas/pkg/common_types"
 	"go-emas/pkg/comparator"
 	"go-emas/pkg/i_agent"
+	"go-emas/pkg/randomizer"
 	"go-emas/pkg/tag_calculator"
 
 	"strconv"
 )
 
 const LOSS_PENALTY common_types.Energy = 20
+const MUTATION_RATE float32 = 0.5
+const ENERGY_PERCENTAGE_TRANSFERRED_TO_CHILD float32 = 0.5
 
 type IAgent interface {
 	Solution() common_types.Solution
@@ -28,8 +31,10 @@ type Agent struct {
 	energy                common_types.Energy
 	tagCalculator         tag_calculator.ITagCalulator
 	agentComparator       comparator.IAgentComparator
+	randomizer            randomizer.IRandomizer
 	getAgentByTagCallback func(tag common_types.ActionTag) i_agent.IAgent
 	deleteAgentCallback   func(id common_types.AgentId)
+	addAgentCallback      func(newAgent i_agent.IAgent)
 }
 
 func NewAgent(id common_types.AgentId,
@@ -38,9 +43,11 @@ func NewAgent(id common_types.AgentId,
 	energy common_types.Energy,
 	tagCalculator tag_calculator.ITagCalulator,
 	agentComparator comparator.IAgentComparator,
+	randomizer randomizer.IRandomizer,
 	getAgentByTagCallback func(tag common_types.ActionTag) i_agent.IAgent,
-	deleteAgentCallback func(id common_types.AgentId)) i_agent.IAgent {
-	a := Agent{id, solution, actionTag, energy, tagCalculator, agentComparator, getAgentByTagCallback, deleteAgentCallback}
+	deleteAgentCallback func(id common_types.AgentId),
+	addAgentCallback func(newAgent i_agent.IAgent)) i_agent.IAgent {
+	a := Agent{id, solution, actionTag, energy, tagCalculator, agentComparator, randomizer, getAgentByTagCallback, deleteAgentCallback, addAgentCallback}
 	return &a
 }
 
@@ -89,7 +96,23 @@ func (a *Agent) Fight() {
 }
 
 func (a *Agent) Reproduce() {
-
+	// TODO get unique id - from environment?
+	var newAgentId common_types.AgentId = a.id + 50
+	solutionDelta, _ := a.randomizer.RandInt(-int(float32(a.solution)*MUTATION_RATE), int(float32(a.solution)*MUTATION_RATE))
+	var newAgentSolution common_types.Solution = a.solution + common_types.Solution(solutionDelta)
+	var newAgentEnergy common_types.Energy = common_types.Energy(float32(a.energy) * ENERGY_PERCENTAGE_TRANSFERRED_TO_CHILD)
+	child := NewAgent(newAgentId,
+		newAgentSolution,
+		common_types.Fight,
+		newAgentEnergy,
+		a.tagCalculator,
+		a.agentComparator,
+		a.randomizer,
+		a.getAgentByTagCallback,
+		a.deleteAgentCallback,
+		a.addAgentCallback)
+	a.addAgentCallback(child)
+	a.ModifyEnergy(-newAgentEnergy)
 }
 
 func (a *Agent) Die() {

@@ -24,6 +24,14 @@ type MockTagCalculator struct {
 	result common_types.ActionTag
 }
 
+type MockRandomizer struct {
+	result int
+}
+
+func (mr MockRandomizer) RandInt(min int, max int) (int, error) {
+	return mr.result, nil
+}
+
 func (m MockTagCalculator) Calculate(common_types.Energy) common_types.ActionTag {
 	return m.result
 }
@@ -35,7 +43,7 @@ func mockGetAgentByTagEmpty(tag common_types.ActionTag) i_agent.IAgent {
 func mockGetAgentByTag(tag common_types.ActionTag) i_agent.IAgent {
 	rivalId := ID + 1
 	rivalSolution := SOLUTION + 10
-	rival := agent.NewAgent(rivalId, rivalSolution, ACTION_TAG, ENERGY, MockTagCalculator{common_types.Fight}, MockAgentComparator{true}, mockGetAgentByTagEmpty, mockDeleteAgent)
+	rival := agent.NewAgent(rivalId, rivalSolution, ACTION_TAG, ENERGY, MockTagCalculator{common_types.Fight}, MockAgentComparator{true}, MockRandomizer{2}, mockGetAgentByTagEmpty, mockDeleteAgent, mockAddAgent)
 	return rival
 }
 
@@ -46,6 +54,13 @@ func mockDeleteAgent(common_types.AgentId) {
 	agentDeleted = true
 }
 
+// todo replace with mock.Called
+var agentAdded bool = false
+
+func mockAddAgent(newAgent i_agent.IAgent) {
+	agentAdded = true
+}
+
 func expectFight(t *testing.T, sut i_agent.IAgent, expectedEnergyAfterFight common_types.Energy) {
 	energyAfterFight := sut.Energy()
 
@@ -54,15 +69,8 @@ func expectFight(t *testing.T, sut i_agent.IAgent, expectedEnergyAfterFight comm
 	}
 }
 
-func expectAgentDeath(t *testing.T, agent i_agent.IAgent) {
-	if agentDeleted == false {
-		t.Errorf("Error - agent with id: %d has not been deleted", agent.Id())
-	}
-	agentDeleted = false
-}
-
 func TestAgent(t *testing.T) {
-	sut := agent.NewAgent(ID, SOLUTION, ACTION_TAG, ENERGY, MockTagCalculator{common_types.Fight}, MockAgentComparator{false}, mockGetAgentByTag, mockDeleteAgent)
+	sut := agent.NewAgent(ID, SOLUTION, ACTION_TAG, ENERGY, MockTagCalculator{common_types.Fight}, MockAgentComparator{false}, MockRandomizer{2}, mockGetAgentByTag, mockDeleteAgent, mockAddAgent)
 
 	t.Run("Test modifying energy", func(t *testing.T) {
 		testParams := []struct {
@@ -88,17 +96,45 @@ func TestAgent(t *testing.T) {
 		sut.Execute()
 		expectFight(t, sut, 30)
 
-		sut := agent.NewAgent(ID, SOLUTION, ACTION_TAG, ENERGY, MockTagCalculator{common_types.Fight}, MockAgentComparator{true}, mockGetAgentByTag, mockDeleteAgent)
+		sut := agent.NewAgent(ID, SOLUTION, ACTION_TAG, ENERGY, MockTagCalculator{common_types.Fight}, MockAgentComparator{true}, MockRandomizer{2}, mockGetAgentByTag, mockDeleteAgent, mockAddAgent)
 		sut.Execute()
 		expectFight(t, sut, 70)
 	})
 
 }
 
+func expectAgentDeath(t *testing.T, agent i_agent.IAgent) {
+	if agentDeleted == false {
+		t.Errorf("Error - agent with id: %d has not been deleted", agent.Id())
+	}
+	agentDeleted = false
+}
+
 func TestAgentGoingToDie(t *testing.T) {
-	sut := agent.NewAgent(ID, SOLUTION, common_types.Death, ENERGY, MockTagCalculator{common_types.Death}, MockAgentComparator{false}, mockGetAgentByTag, mockDeleteAgent)
+	sut := agent.NewAgent(ID, SOLUTION, common_types.Death, ENERGY, MockTagCalculator{common_types.Death}, MockAgentComparator{false}, MockRandomizer{2}, mockGetAgentByTag, mockDeleteAgent, mockAddAgent)
 	t.Run("Test death", func(t *testing.T) {
 		sut.Execute()
 		expectAgentDeath(t, sut)
+	})
+}
+
+func expectAgentMutation(t *testing.T, agent i_agent.IAgent, finalEnergy common_types.Energy) {
+	if agentAdded == false {
+		t.Errorf("Error - agent with id: %d has not been added", agent.Id())
+	}
+	agentAdded = false
+
+	if agent.Energy() != finalEnergy {
+		t.Errorf("Error in mutation, expected energy: %d, got: %d.", finalEnergy, agent.Energy())
+	}
+}
+
+func TestAgentGoingToReproduce(t *testing.T) {
+	var energy common_types.Energy = 80
+	sut := agent.NewAgent(ID, SOLUTION, common_types.Reproduction, energy, MockTagCalculator{common_types.Reproduction}, MockAgentComparator{false}, MockRandomizer{2}, mockGetAgentByTag, mockDeleteAgent, mockAddAgent)
+	t.Run("Test mutation", func(t *testing.T) {
+		sut.Execute()
+		var expectedEnergyAfterMutation common_types.Energy = 40
+		expectAgentMutation(t, sut, expectedEnergyAfterMutation)
 	})
 }
