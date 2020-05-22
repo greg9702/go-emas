@@ -12,7 +12,7 @@ import (
 // IPopulationFactory interface for population factories
 type IPopulationFactory interface {
 	CreatePopulation(populationSize int,
-		getAgentByTagCallback func(tag string) i_agent.IAgent,
+		getAgentByTagCallback func(tag string) (i_agent.IAgent, error),
 		deleteAgentCallback func(id int64) error,
 		addAgentCallback func(newAgent i_agent.IAgent) error) (map[int64]i_agent.IAgent, error)
 }
@@ -29,7 +29,7 @@ func NewBasicPopulationFactroy() *BasicPopulationFactroy {
 
 // CreatePopulation is used to creating initial population
 func (b *BasicPopulationFactroy) CreatePopulation(populationSize int,
-	getAgentByTagCallback func(tag string) i_agent.IAgent,
+	getAgentByTagCallback func(tag string) (i_agent.IAgent, error),
 	deleteAgentCallback func(id int64) error,
 	addAgentCallback func(newAgent i_agent.IAgent) error) (map[int64]i_agent.IAgent, error) {
 

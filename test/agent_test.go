@@ -36,16 +36,16 @@ func (m MockTagCalculator) Calculate(energy int) string {
 	return m.result
 }
 
-func mockGetAgentByTagEmpty(tag string) i_agent.IAgent {
-	return nil
+func mockGetAgentByTagEmpty(tag string) (i_agent.IAgent, error) {
+	return nil, nil
 }
 
-func mockGetAgentByTag(tag string) i_agent.IAgent {
+func mockGetAgentByTag(tag string) (i_agent.IAgent, error) {
 	rivalID := ID + 1
 	rivalSolution := solution + 10
 	rival := agent.NewAgent(rivalID, rivalSolution, actionTag, energy, MockTagCalculator{common_types.Fight},
 		MockAgentComparator{true}, MockRandomizer{2}, mockGetAgentByTagEmpty, mockDeleteAgent, mockAddAgent)
-	return rival
+	return rival, nil
 }
 
 // todo replace with mock.Called

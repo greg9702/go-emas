@@ -1,6 +1,7 @@
 package agent
 
 import (
+	"fmt"
 	"go-emas/pkg/common_types"
 	"go-emas/pkg/comparator"
 	"go-emas/pkg/i_agent"
@@ -25,7 +26,7 @@ type Agent struct {
 	tagCalculator         tag_calculator.ITagCalulator
 	agentComparator       comparator.IAgentComparator
 	randomizer            randomizer.IRandomizer
-	getAgentByTagCallback func(tag string) i_agent.IAgent
+	getAgentByTagCallback func(tag string) (i_agent.IAgent, error)
 	deleteAgentCallback   func(id int64) error
 	addAgentCallback      func(newAgent i_agent.IAgent) error
 }
@@ -38,7 +39,7 @@ func NewAgent(
 	tagCalculator tag_calculator.ITagCalulator,
 	agentComparator comparator.IAgentComparator,
 	randomizer randomizer.IRandomizer,
-	getAgentByTagCallback func(tag string) i_agent.IAgent,
+	getAgentByTagCallback func(tag string) (i_agent.IAgent, error),
 	deleteAgentCallback func(id int64) error,
 	addAgentCallback func(newAgent i_agent.IAgent) error) i_agent.IAgent {
 	a := Agent{id, solution, actionTag, energy, tagCalculator, agentComparator, randomizer, getAgentByTagCallback, deleteAgentCallback, addAgentCallback}
@@ -101,7 +102,12 @@ func (a *Agent) Execute() {
 
 // Fight is used to perform fight action
 func (a *Agent) fight() {
-	var rival i_agent.IAgent = a.getAgentByTagCallback(common_types.Fight)
+	rival, err := a.getAgentByTagCallback(common_types.Fight)
+	if err != nil {
+		// TODO what about this cast?
+		fmt.Println("[Agent] Agent with id " + strconv.Itoa(int(a.id)) + " could not perform fight - there is no rival for him")
+		return
+	}
 	var won bool = a.agentComparator.Compare(a, rival)
 	if won {
 		a.ModifyEnergy(lossPenalty)

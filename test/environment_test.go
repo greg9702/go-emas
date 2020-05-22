@@ -14,7 +14,7 @@ var populationGeneratorMock func(populationSize int) (map[int64]i_agent.IAgent, 
 type mockPopulationFactory struct{}
 
 func (m *mockPopulationFactory) CreatePopulation(populationSize int,
-	getAgentByTagCallback func(tag string) i_agent.IAgent,
+	getAgentByTagCallback func(tag string) (i_agent.IAgent, error),
 	deleteAgentCallback func(id int64) error,
 	addAgentCallback func(newAgent i_agent.IAgent) error) (map[int64]i_agent.IAgent, error) {
 	return populationGeneratorMock(populationSize)
@@ -165,7 +165,7 @@ func TestAddToPopulation(t *testing.T) {
 		return population, nil
 	}
 
-	t.Run("Add element to list which do not exists", func(t *testing.T) {
+	t.Run("Add element to list", func(t *testing.T) {
 
 		env, err := environment.NewEnvironment(populationSize, populationFactory)
 		newAgent := &mockAgent{10}
@@ -178,19 +178,6 @@ func TestAddToPopulation(t *testing.T) {
 
 		if err != nil {
 			t.Errorf("Got unexpected err: %s", err)
-		}
-	})
-
-	t.Run("Add element to list which already exists", func(t *testing.T) {
-
-		env, err := environment.NewEnvironment(populationSize, populationFactory)
-
-		newAgent := &mockAgent{3}
-
-		err = env.AddToPopulation(newAgent)
-
-		if err == nil {
-			t.Errorf("Expected error but not received")
 		}
 	})
 }

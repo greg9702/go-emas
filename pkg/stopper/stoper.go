@@ -5,7 +5,7 @@ type IStopper interface {
 	Stop(iteration int) bool
 }
 
-const maxIters = 10
+const maxIters = 1000
 
 // IterationBasedStopper is a stopper which use
 type IterationBasedStopper struct {

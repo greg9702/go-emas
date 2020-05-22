@@ -3,6 +3,7 @@ package environment
 import (
 	"errors"
 	"fmt"
+	"go-emas/pkg/common_types"
 	"go-emas/pkg/i_agent"
 	"go-emas/pkg/population_factory"
 	"go-emas/pkg/stopper"
@@ -16,7 +17,7 @@ type IEnvironment interface {
 	DeleteFromPopulation(id int64) error
 	AddToPopulation(agent i_agent.IAgent) error
 	ShowMap()
-	GetAgentByTag(tag string) i_agent.IAgent
+	GetAgentByTag(tag string) (i_agent.IAgent, error)
 }
 
 // Environment is struct representing environment
@@ -82,14 +83,19 @@ func (e *Environment) PopulationSize() int {
 	return len(e.population)
 }
 
-// GetAgentByTag - return random Agent which has a given tag and has not yet performed its action in the turn
-func (e *Environment) GetAgentByTag(tag string) i_agent.IAgent {
-	for k := range e.population {
-		if e.population[k].ActionTag() == tag {
-			return e.population[k]
-		}
+// TODO improve the structure for agents waiting for actions
+func (e *Environment) markActionAsDoneForFirstAgentInQueue(action string) {
+	e.agentsBeforeActions[action] = append(e.agentsBeforeActions[action][:0], e.agentsBeforeActions[action][1:]...)
+}
+
+// GetAgentByTag - return random Agent which has a given tag and has not yet performed its action in the turn. Mark the action of agent as done
+func (e *Environment) GetAgentByTag(actionTag string) (i_agent.IAgent, error) {
+	if len(e.agentsBeforeActions[actionTag]) > 0 {
+		agent := e.agentsBeforeActions[actionTag][0]
+		e.markActionAsDoneForFirstAgentInQueue(actionTag)
+		return agent, nil
 	}
-	return nil
+	return nil, errors.New("There is no agent to perform action: " + actionTag)
 }
 
 // DeleteFromPopulation used to delete agent from map by id
@@ -107,7 +113,7 @@ func (e *Environment) DeleteFromPopulation(id int64) error {
 
 // AddToPopulation adds new record to population
 func (e *Environment) AddToPopulation(agent i_agent.IAgent) error {
-	agent.SetId(int64(len(e.population))) // TODO improve IDs generation
+	agent.SetId(e.getMaxAgentId() + 1) // TODO improve IDs generation
 	_, ok := e.population[agent.ID()]
 	if ok {
 		return errors.New("Element with " + strconv.FormatInt(agent.ID(), 10) + " id already exists")
@@ -128,18 +134,22 @@ func (e *Environment) tagAgents() {
 }
 
 func (e *Environment) executeActions() {
-	// for len(e.agentsBeforeActions) > 0 {
-	// 	action := getArbitraryAction(e.agentsBeforeActions)
-	// 	fmt.Println(action)
-	// 	fmt.Println(e.agentsBeforeActions[action][0])
-	// 	e.agentsBeforeActions[action][0].Execute()
-	// 	e.agentsBeforeActions[action][0]
-	// }
+	actions := []string{common_types.Death, common_types.Reproduction, common_types.Fight}
+	for _, action := range actions {
+		for len(e.agentsBeforeActions[action]) > 0 {
+			currentExecutor := e.agentsBeforeActions[action][0]
+			e.agentsBeforeActions[action] = append(e.agentsBeforeActions[action][:0], e.agentsBeforeActions[action][1:]...)
+			currentExecutor.Execute()
+		}
+	}
 }
 
-func getArbitraryAction(agents map[string][]i_agent.IAgent) string {
-	for k := range agents {
-		return k
+func (e *Environment) getMaxAgentId() int64 {
+	var maxId int64 = 0
+	for id := range e.population {
+		if id > maxId {
+			maxId = id
+		}
 	}
-	return ""
+	return maxId
 }
