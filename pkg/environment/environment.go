@@ -28,16 +28,21 @@ type Environment struct {
 // NewEnvironment creates new Environment object
 func NewEnvironment(populationSize int, populationFactory population_factory.IPopulationFactory) (*Environment, error) {
 
-	population, err := populationFactory.CreatePopulation(populationSize)
+	var e = Environment{
+		population: make(map[int64]i_agent.IAgent),
+		stopper:    stopper.NewIterationBasedStopper(),
+	}
+
+	population, err := populationFactory.CreatePopulation(populationSize,
+		e.GetAgentByTag,
+		e.DeleteFromPopulation,
+		e.AddToPopulation)
 
 	if err != nil {
 		return nil, err
 	}
 
-	var e = Environment{
-		population: population,
-		stopper:    stopper.NewIterationBasedStopper(),
-	}
+	e.population = population
 
 	return &e, nil
 }
@@ -50,9 +55,9 @@ func (e *Environment) Start() error {
 	for {
 		i++
 
-		// e.tagAgents()
-		// e.executeActions()
-
+		e.tagAgents()
+		e.executeActions()
+		e.ShowMap()
 		fmt.Println("Running...")
 
 		if e.stopper.Stop(i) {
@@ -64,10 +69,20 @@ func (e *Environment) Start() error {
 	return nil
 }
 
-// PopulationSize return current size of poulation
+// PopulationSize return current size of population
 func (e *Environment) PopulationSize() int {
 	// TODO something like pupulationMutex?
 	return len(e.population)
+}
+
+// GetAgentByTag - return random Agent which has a given tag
+func (e *Environment) GetAgentByTag(tag string) i_agent.IAgent {
+	for k := range e.population {
+		if e.population[k].ActionTag() == tag {
+			return e.population[k]
+		}
+	}
+	return nil
 }
 
 // DeleteFromPopulation used to delete agent from map by id
@@ -99,9 +114,9 @@ func (e *Environment) ShowMap() {
 }
 
 func (e *Environment) tagAgents() {
-	// for _, agent := range e.population {
-	// 	agent.Tag()
-	// }
+	for _, agent := range e.population {
+		agent.Tag()
+	}
 }
 
 func (e *Environment) executeActions() {

@@ -26,8 +26,8 @@ type Agent struct {
 	agentComparator       comparator.IAgentComparator
 	randomizer            randomizer.IRandomizer
 	getAgentByTagCallback func(tag string) i_agent.IAgent
-	deleteAgentCallback   func(id int64)
-	addAgentCallback      func(newAgent i_agent.IAgent)
+	deleteAgentCallback   func(id int64) error
+	addAgentCallback      func(newAgent i_agent.IAgent) error
 }
 
 // NewAgent creates new Agent object
@@ -39,8 +39,8 @@ func NewAgent(
 	agentComparator comparator.IAgentComparator,
 	randomizer randomizer.IRandomizer,
 	getAgentByTagCallback func(tag string) i_agent.IAgent,
-	deleteAgentCallback func(id int64),
-	addAgentCallback func(newAgent i_agent.IAgent)) i_agent.IAgent {
+	deleteAgentCallback func(id int64) error,
+	addAgentCallback func(newAgent i_agent.IAgent) error) i_agent.IAgent {
 	a := Agent{id, solution, actionTag, energy, tagCalculator, agentComparator, randomizer, getAgentByTagCallback, deleteAgentCallback, addAgentCallback}
 	return &a
 }
