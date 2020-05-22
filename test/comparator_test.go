@@ -36,6 +36,9 @@ func (m *MockAgent) ModifyEnergy(energyDelta int) {
 func (m *MockAgent) Tag() {
 }
 
+func (m *MockAgent) SetId(id int64) {
+}
+
 func (m *MockAgent) Execute() {
 }
 

@@ -51,15 +51,17 @@ func mockGetAgentByTag(tag string) i_agent.IAgent {
 // todo replace with mock.Called
 var agentDeleted bool = false
 
-func mockDeleteAgent(id int64) {
+func mockDeleteAgent(id int64) error {
 	agentDeleted = true
+	return nil
 }
 
 // todo replace with mock.Called
 var agentAdded bool = false
 
-func mockAddAgent(newAgent i_agent.IAgent) {
+func mockAddAgent(newAgent i_agent.IAgent) error {
 	agentAdded = true
+	return nil
 }
 
 func expectFight(t *testing.T, sut i_agent.IAgent, expectedEnergyAfterFight int) {

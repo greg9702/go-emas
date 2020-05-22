@@ -13,7 +13,10 @@ var populationGeneratorMock func(populationSize int) (map[int64]i_agent.IAgent, 
 
 type mockPopulationFactory struct{}
 
-func (b *mockPopulationFactory) CreatePopulation(populationSize int) (map[int64]i_agent.IAgent, error) {
+func (m *mockPopulationFactory) CreatePopulation(populationSize int,
+	getAgentByTagCallback func(tag string) i_agent.IAgent,
+	deleteAgentCallback func(id int64) error,
+	addAgentCallback func(newAgent i_agent.IAgent) error) (map[int64]i_agent.IAgent, error) {
 	return populationGeneratorMock(populationSize)
 }
 
@@ -23,6 +26,10 @@ type mockAgent struct {
 
 func (m *mockAgent) ID() int64 {
 	return m.id
+}
+
+func (m *mockAgent) SetId(id int64) {
+	m.id = id
 }
 
 func (m *mockAgent) Solution() common_types.Solution {
@@ -161,8 +168,11 @@ func TestAddToPopulation(t *testing.T) {
 	t.Run("Add element to list which do not exists", func(t *testing.T) {
 
 		env, err := environment.NewEnvironment(populationSize, populationFactory)
-
 		newAgent := &mockAgent{10}
+
+		if newAgent.ID() != 10 {
+			t.Errorf("Error in agent creating, expected id: %d got %d.", 10, newAgent.ID())
+		}
 
 		err = env.AddToPopulation(newAgent)
 
