@@ -12,8 +12,9 @@ type LinearFitnessCalculator struct {
 }
 
 // NewLinearFitnessCalculator creates new LinearFitnessCalculator object
-func NewLinearFitnessCalculator() LinearFitnessCalculator {
-	return LinearFitnessCalculator{}
+func NewLinearFitnessCalculator() *LinearFitnessCalculator {
+	l := LinearFitnessCalculator{}
+	return &l
 }
 
 // CalculateFitness calculate fitness value for passed soultion argument

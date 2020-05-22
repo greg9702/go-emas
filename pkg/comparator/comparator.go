@@ -16,9 +16,9 @@ type LinearAgentComparator struct {
 }
 
 // NewLinearAgentComparator creates new LinearAgentComparator object
-func NewLinearAgentComparator() LinearAgentComparator {
+func NewLinearAgentComparator() *LinearAgentComparator {
 	lac := LinearAgentComparator{fitness_calculator.NewLinearFitnessCalculator()}
-	return lac
+	return &lac
 }
 
 // Compare method used to compare two agents
