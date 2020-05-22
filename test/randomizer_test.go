@@ -66,7 +66,8 @@ func TestBaseRandomizer(t *testing.T) {
 			max int
 		}{
 			{0, -5},
-			{-1, 0},
+			{0, -1},
+			{-3, -5},
 			{50, 49},
 		}
 
@@ -75,7 +76,61 @@ func TestBaseRandomizer(t *testing.T) {
 				_, err := randomizer.BaseRand().RandInt(param.min, param.max)
 
 				if err == nil {
-					t.Errorf("Expecting error but not received")
+					t.Errorf("Expecting error but not received, input params min: %d, max: %d", param.min, param.max)
+				}
+			}
+		}
+	})
+
+	t.Run("Test one positive and negative number", func(t *testing.T) {
+		testParams := []struct {
+			min int
+			max int
+		}{
+			{-1, 0},
+			{-1, 4},
+			{-20, 23},
+		}
+
+		numberOfIteration := 100
+
+		for _, param := range testParams {
+			for i := 0; i < numberOfIteration; i++ {
+				result, err := randomizer.BaseRand().RandInt(param.min, param.max)
+
+				if err != nil {
+					t.Errorf("Error got unexpected error: %s", err)
+				}
+
+				if param.min > result || result > param.max {
+					t.Errorf("Error in RandInt, for min: %d and max: %d got: %d.", param.min, param.max, result)
+				}
+			}
+		}
+	})
+
+	t.Run("Test both negative numbers", func(t *testing.T) {
+		testParams := []struct {
+			min int
+			max int
+		}{
+			{-1, -1},
+			{-20, -1},
+			{-4, -3},
+		}
+
+		numberOfIteration := 100
+
+		for _, param := range testParams {
+			for i := 0; i < numberOfIteration; i++ {
+				result, err := randomizer.BaseRand().RandInt(param.min, param.max)
+
+				if err != nil {
+					t.Errorf("Error got unexpected error: %s", err)
+				}
+
+				if param.min > result || result > param.max {
+					t.Errorf("Error in RandInt, for min: %d and max: %d got: %d.", param.min, param.max, result)
 				}
 			}
 		}
