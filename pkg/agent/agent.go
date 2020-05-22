@@ -11,7 +11,7 @@ import (
 )
 
 const lossPenalty int = 20
-const mnutationRate float32 = 0.5
+const mutationRate float32 = 0.5
 
 // percent of current parent energy passed to a child as inital energy value
 const energyPercentageToChild float32 = 0.5
@@ -50,6 +50,10 @@ func (a *Agent) ID() int64 {
 	return a.id
 }
 
+func (a *Agent) SetId(id int64) {
+	a.id = id
+}
+
 // Solution returns agent solution
 func (a *Agent) Solution() common_types.Solution {
 	return a.solution
@@ -67,7 +71,7 @@ func (a *Agent) Energy() int {
 
 // String used to display agent struct using fmt
 func (a *Agent) String() string {
-	return "Agent: " + strconv.Itoa(int(a.id)) + " solution: " + strconv.Itoa(int(a.solution))
+	return "Agent: " + strconv.Itoa(int(a.id)) + " solution: " + strconv.Itoa(int(a.solution)) + " energy: " + strconv.Itoa(a.energy) + "\n"
 }
 
 // ModifyEnergy is used to modify agent energy
@@ -114,7 +118,7 @@ func (a *Agent) reproduce() {
 	// TODO environment.addAgent should generate it
 	var newAgentID int64 = a.id + 50
 
-	solutionDelta, _ := a.randomizer.RandInt(-int(float32(a.solution)*mnutationRate), int(float32(a.solution)*mnutationRate))
+	solutionDelta, _ := a.randomizer.RandInt(-int(float32(a.solution)*mutationRate), int(float32(a.solution)*mutationRate))
 
 	var newAgentSolution common_types.Solution = a.solution + common_types.Solution(solutionDelta)
 	var newAgentEnergy int = int(float32(a.energy) * energyPercentageToChild) // TODO this must be int!

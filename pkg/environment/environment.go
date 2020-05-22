@@ -21,8 +21,9 @@ type IEnvironment interface {
 
 // Environment is struct representing environment
 type Environment struct {
-	population map[int64]i_agent.IAgent
-	stopper    stopper.IStopper
+	population          map[int64]i_agent.IAgent
+	agentsBeforeActions map[string][]i_agent.IAgent
+	stopper             stopper.IStopper
 }
 
 // NewEnvironment creates new Environment object
@@ -56,6 +57,12 @@ func (e *Environment) Start() error {
 		i++
 
 		e.tagAgents()
+
+		e.agentsBeforeActions = make(map[string][]i_agent.IAgent)
+		for _, agent := range e.population {
+			e.agentsBeforeActions[agent.ActionTag()] = append(e.agentsBeforeActions[agent.ActionTag()], agent)
+		}
+
 		e.executeActions()
 		e.ShowMap()
 		fmt.Println("Running...")
@@ -75,7 +82,7 @@ func (e *Environment) PopulationSize() int {
 	return len(e.population)
 }
 
-// GetAgentByTag - return random Agent which has a given tag
+// GetAgentByTag - return random Agent which has a given tag and has not yet performed its action in the turn
 func (e *Environment) GetAgentByTag(tag string) i_agent.IAgent {
 	for k := range e.population {
 		if e.population[k].ActionTag() == tag {
@@ -100,6 +107,7 @@ func (e *Environment) DeleteFromPopulation(id int64) error {
 
 // AddToPopulation adds new record to population
 func (e *Environment) AddToPopulation(agent i_agent.IAgent) error {
+	agent.SetId(int64(len(e.population))) // TODO improve IDs generation
 	_, ok := e.population[agent.ID()]
 	if ok {
 		return errors.New("Element with " + strconv.FormatInt(agent.ID(), 10) + " id already exists")
@@ -120,7 +128,18 @@ func (e *Environment) tagAgents() {
 }
 
 func (e *Environment) executeActions() {
-	for _, agent := range e.population {
-		agent.Execute()
+	// for len(e.agentsBeforeActions) > 0 {
+	// 	action := getArbitraryAction(e.agentsBeforeActions)
+	// 	fmt.Println(action)
+	// 	fmt.Println(e.agentsBeforeActions[action][0])
+	// 	e.agentsBeforeActions[action][0].Execute()
+	// 	e.agentsBeforeActions[action][0]
+	// }
+}
+
+func getArbitraryAction(agents map[string][]i_agent.IAgent) string {
+	for k := range agents {
+		return k
 	}
+	return ""
 }
