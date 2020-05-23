@@ -57,14 +57,10 @@ func (e *Environment) Start() error {
 	for {
 		i++
 
-		e.tagAgents()
-
-		e.agentsBeforeActions = make(map[string][]i_agent.IAgent)
-		for _, agent := range e.population {
-			e.agentsBeforeActions[agent.ActionTag()] = append(e.agentsBeforeActions[agent.ActionTag()], agent)
-		}
+		e.TagAgents()
 
 		e.executeActions()
+
 		e.ShowMap()
 		fmt.Println("Running...")
 
@@ -88,8 +84,9 @@ func (e *Environment) markActionAsDoneForFirstAgentInQueue(action string) {
 	e.agentsBeforeActions[action] = append(e.agentsBeforeActions[action][:0], e.agentsBeforeActions[action][1:]...)
 }
 
-// GetAgentByTag - return random Agent which has a given tag and has not yet performed its action in the turn. Mark the action of agent as done
+// GetAgentByTag return random Agent which has a given tag and has not yet performed its action in the turn. Mark the action of agent as done
 func (e *Environment) GetAgentByTag(actionTag string) (i_agent.IAgent, error) {
+	// fmt.Println(len(e.agentsBeforeActions[actionTag]))
 	if len(e.agentsBeforeActions[actionTag]) > 0 {
 		agent := e.agentsBeforeActions[actionTag][0]
 		e.markActionAsDoneForFirstAgentInQueue(actionTag)
@@ -127,9 +124,14 @@ func (e *Environment) ShowMap() {
 	fmt.Println("[Environment] ", e.population)
 }
 
-func (e *Environment) tagAgents() {
+// TagAgents each agent tags itself. Then all agents are marked to perform actions
+func (e *Environment) TagAgents() {
 	for _, agent := range e.population {
 		agent.Tag()
+	}
+	e.agentsBeforeActions = make(map[string][]i_agent.IAgent)
+	for _, agent := range e.population {
+		e.agentsBeforeActions[agent.ActionTag()] = append(e.agentsBeforeActions[agent.ActionTag()], agent)
 	}
 }
 

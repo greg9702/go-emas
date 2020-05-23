@@ -137,7 +137,7 @@ func TestDeleteFromPopulation(t *testing.T) {
 
 	})
 
-	t.Run("Normal DeleteFromPopulation", func(t *testing.T) {
+	t.Run("Error expected when trying to DeleteFromPopulation agent with id that does not exist", func(t *testing.T) {
 
 		env, err := environment.NewEnvironment(populationSize, populationFactory)
 
@@ -180,4 +180,58 @@ func TestAddToPopulation(t *testing.T) {
 			t.Errorf("Got unexpected err: %s", err)
 		}
 	})
+}
+
+type MockAgentWithTag struct {
+	mockAgent
+	actionTag string
+}
+
+func (m *MockAgentWithTag) ActionTag() string {
+	return m.actionTag
+}
+
+func TestGetAgentByTag(t *testing.T) {
+
+	populationSize := 5
+
+	populationFactory := &mockPopulationFactory{}
+	populationGeneratorMock = func(populationSize int) (map[int64]i_agent.IAgent, error) {
+
+		population := make(map[int64]i_agent.IAgent)
+		for i := 0; i < populationSize; i++ {
+			population[int64(i+1)] = &MockAgentWithTag{mockAgent{int64(i + 1)}, common_types.Death}
+		}
+		return population, nil
+	}
+
+	sut, _ := environment.NewEnvironment(populationSize, populationFactory)
+	sut.TagAgents()
+
+	t.Run("Return error when there is no agent with specified tag", func(t *testing.T) {
+		actionNotAvail := common_types.Reproduction
+		_, err := sut.GetAgentByTag(actionNotAvail)
+		if err == nil {
+			t.Errorf("There was no agent with specified tag in population, but GetAgentByTag reported no error")
+		}
+	})
+
+	t.Run("Return agent with specified tag as long as there is one", func(t *testing.T) {
+		action := common_types.Death
+		for i := 0; i < populationSize; i++ {
+			_, err := sut.GetAgentByTag(action)
+			if err != nil {
+				t.Errorf("Got unexpeced error, agent with tag %s should be returned", action)
+			}
+		}
+	})
+
+	t.Run("Return error when there were agents with specified tag, but all of them have done action", func(t *testing.T) {
+		action := common_types.Death
+		_, err := sut.GetAgentByTag(action)
+		if err == nil {
+			t.Errorf("There was no agent with specified tag in population, but GetAgentByTag reported no error")
+		}
+	})
+
 }
