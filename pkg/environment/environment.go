@@ -7,6 +7,7 @@ import (
 	"go-emas/pkg/common_types"
 	"go-emas/pkg/i_agent"
 	"go-emas/pkg/population_factory"
+	"go-emas/pkg/randomizer"
 	"go-emas/pkg/stopper"
 	"os"
 	"strconv"
@@ -27,14 +28,19 @@ type Environment struct {
 	population          map[int64]i_agent.IAgent
 	agentsBeforeActions map[string][]i_agent.IAgent
 	stopper             stopper.IStopper
+	randomizer          randomizer.IRandomizer
 }
 
 // NewEnvironment creates new Environment object
-func NewEnvironment(populationSize int, populationFactory population_factory.IPopulationFactory) (*Environment, error) {
+func NewEnvironment(populationSize int,
+	populationFactory population_factory.IPopulationFactory,
+	stopper stopper.IStopper,
+	randomizer randomizer.IRandomizer) (*Environment, error) {
 
 	var e = Environment{
 		population: make(map[int64]i_agent.IAgent),
-		stopper:    stopper.NewIterationBasedStopper(),
+		stopper:    stopper,
+		randomizer: randomizer,
 	}
 
 	population, err := populationFactory.CreatePopulation(populationSize,
@@ -90,17 +96,17 @@ func (e *Environment) PopulationSize() int {
 	return len(e.population)
 }
 
-// TODO improve the structure for agents waiting for actions
-func (e *Environment) markActionAsDoneForFirstAgentInQueue(action string) {
-	e.agentsBeforeActions[action] = append(e.agentsBeforeActions[action][:0], e.agentsBeforeActions[action][1:]...)
+// removeAgentFromWaitingQueue mark agent action as done
+func (e *Environment) removeAgentFromWaitingQueue(action string, agentIndex int) {
+	e.agentsBeforeActions[action] = append(e.agentsBeforeActions[action][:agentIndex], e.agentsBeforeActions[action][agentIndex+1:]...)
 }
 
-// GetAgentByTag return random Agent which has a given tag and has not yet performed its action in the turn. Mark the action of agent as done
+// GetAgentByTag return random agent which has a given tag and has not yet performed its action in the turn. Mark the action of agent as done
 func (e *Environment) GetAgentByTag(actionTag string) (i_agent.IAgent, error) {
-	// fmt.Println(len(e.agentsBeforeActions[actionTag]))
 	if len(e.agentsBeforeActions[actionTag]) > 0 {
-		agent := e.agentsBeforeActions[actionTag][0]
-		e.markActionAsDoneForFirstAgentInQueue(actionTag)
+		agentIndex, _ := randomizer.BaseRand().RandInt(0, len(e.agentsBeforeActions[actionTag])-1)
+		agent := e.agentsBeforeActions[actionTag][agentIndex]
+		e.removeAgentFromWaitingQueue(actionTag, agentIndex)
 		return agent, nil
 	}
 	return nil, errors.New("There is no agent to perform action: " + actionTag)

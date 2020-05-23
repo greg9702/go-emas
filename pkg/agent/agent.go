@@ -128,13 +128,11 @@ func (a *Agent) fight() {
 
 // Reproduce is used to perform fight action
 func (a *Agent) reproduce() {
-	// TODO get unique id - from environment?
-	// TODO environment.addAgent should generate it
-	var newAgentID int64 = a.id + 50
+	var newAgentID int64
 
 	solutionDelta, _ := a.randomizer.RandInt(-int(float32(a.solution)*mutationRate), int(float32(a.solution)*mutationRate))
-
 	var newAgentSolution common_types.Solution = a.solution + common_types.Solution(solutionDelta)
+
 	var newAgentEnergy int = int(float32(a.energy) * energyPercentageToChild) // TODO this must be int!
 
 	child := NewAgent(newAgentID,
@@ -150,7 +148,7 @@ func (a *Agent) reproduce() {
 
 	a.addAgentCallback(child)
 	a.ModifyEnergy(-newAgentEnergy)
-	fmt.Println("[Reproduce] Agent [" + strconv.Itoa(int(a.id)) + "] reproduced, spawned Agent [" + strconv.Itoa(int(newAgentID)) + "]")
+	fmt.Println("[Reproduce] Agent [" + strconv.Itoa(int(a.id)) + "] reproduced, spawned Agent [" + strconv.Itoa(int(child.ID())) + "]")
 }
 
 func (a *Agent) die() {
