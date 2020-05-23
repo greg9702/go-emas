@@ -15,7 +15,5 @@ func main() {
 	if err != nil {
 		panic("Environment setup error")
 	}
-
-	env.ShowMap()
 	env.Start()
 }

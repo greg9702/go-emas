@@ -73,7 +73,7 @@ func (a *Agent) Energy() int {
 
 // String used to display agent struct using fmt
 func (a *Agent) String() string {
-	return "Agent: " + strconv.Itoa(int(a.id)) + " solution: " + strconv.Itoa(int(a.solution)) + " energy: " + strconv.Itoa(a.energy) + "\n"
+	return "Agent [" + strconv.Itoa(int(a.id)) + "] solution: " + strconv.Itoa(int(a.solution)) + " energy: " + strconv.Itoa(a.energy)
 }
 
 // ModifyEnergy is used to modify agent energy
@@ -107,19 +107,23 @@ func (a *Agent) fight() {
 
 	if err != nil {
 		// TODO what about this cast?
-		fmt.Println("[Agent] Agent with id " + strconv.Itoa(int(a.id)) + " could not perform fight - there is no rival for him")
+		fmt.Println("[Figth] Agent [" + strconv.Itoa(int(a.id)) + "] there is no rival for him")
 		return
 	}
 
 	var won bool = a.agentComparator.Compare(a, rival)
+	var result string
 
 	if won {
+		result = "1:0"
 		a.ModifyEnergy(lossPenalty)
 		rival.ModifyEnergy(-lossPenalty)
 	} else {
+		result = "0:1"
 		a.ModifyEnergy(-lossPenalty)
 		rival.ModifyEnergy(lossPenalty)
 	}
+	fmt.Println("[Figth] Agent [" + strconv.Itoa(int(a.id)) + "] vs Agnet [" + strconv.Itoa(int(rival.ID())) + "] result: " + result)
 }
 
 // Reproduce is used to perform fight action
@@ -146,8 +150,10 @@ func (a *Agent) reproduce() {
 
 	a.addAgentCallback(child)
 	a.ModifyEnergy(-newAgentEnergy)
+	fmt.Println("[Reproduce] Agent [" + strconv.Itoa(int(a.id)) + "] reproduced, spawned Agent [" + strconv.Itoa(int(newAgentID)) + "]")
 }
 
 func (a *Agent) die() {
+	fmt.Println("[Die] Agent [" + strconv.Itoa(int(a.id)) + "] died")
 	a.deleteAgentCallback(a.id)
 }

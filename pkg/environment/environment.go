@@ -57,12 +57,20 @@ func (e *Environment) Start() error {
 	var i int = 0
 
 	for {
-		fmt.Printf("Iteration number: %d\n", i)
+		fmt.Printf("############ Iteration number: %d ############\n", i)
+
+		fmt.Println("--------------------------")
+		fmt.Println("Agents before iteration: ")
+		fmt.Println("--------------------------")
+
+		e.ShowMap()
+
+		fmt.Println("--------------------------")
+		fmt.Println("Events: ")
+		fmt.Println("--------------------------")
 
 		e.TagAgents()
 		e.executeActions()
-
-		e.ShowMap()
 
 		if e.stopper.Stop(i) {
 			fmt.Println("Stop condition met")
@@ -70,6 +78,7 @@ func (e *Environment) Start() error {
 		}
 		i++
 		_, _ = bufio.NewReader(os.Stdin).ReadString('\n')
+		fmt.Println("")
 	}
 
 	return nil
@@ -97,8 +106,7 @@ func (e *Environment) GetAgentByTag(actionTag string) (i_agent.IAgent, error) {
 	return nil, errors.New("There is no agent to perform action: " + actionTag)
 }
 
-// DeleteFromPopulation used to delete agent from map by id
-// passing as callback to Agent
+// DeleteFromPopulation used to delete agent from map by id passed as callback to Agent
 func (e *Environment) DeleteFromPopulation(id int64) error {
 	// TODO use pupulationMutex
 	_, ok := e.population[id]
@@ -123,7 +131,9 @@ func (e *Environment) AddToPopulation(agent i_agent.IAgent) error {
 
 // ShowMap is a helper used to display current state of a population
 func (e *Environment) ShowMap() {
-	fmt.Println(e.population)
+	for _, v := range e.population {
+		fmt.Println(v)
+	}
 }
 
 // TagAgents each agent tags itself. Then all agents are marked to perform actions
