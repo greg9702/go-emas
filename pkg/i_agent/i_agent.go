@@ -11,6 +11,6 @@ type IAgent interface {
 	ModifyEnergy(energyDelta int)
 	Tag()
 	Execute()
-	SetId(int64)
+	SetID(int64)
 	String() string
 }

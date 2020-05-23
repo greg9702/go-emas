@@ -51,7 +51,8 @@ func (a *Agent) ID() int64 {
 	return a.id
 }
 
-func (a *Agent) SetId(id int64) {
+// SetID is used to set agents id
+func (a *Agent) SetID(id int64) {
 	a.id = id
 }
 
@@ -103,12 +104,15 @@ func (a *Agent) Execute() {
 // Fight is used to perform fight action
 func (a *Agent) fight() {
 	rival, err := a.getAgentByTagCallback(common_types.Fight)
+
 	if err != nil {
 		// TODO what about this cast?
 		fmt.Println("[Agent] Agent with id " + strconv.Itoa(int(a.id)) + " could not perform fight - there is no rival for him")
 		return
 	}
+
 	var won bool = a.agentComparator.Compare(a, rival)
+
 	if won {
 		a.ModifyEnergy(lossPenalty)
 		rival.ModifyEnergy(-lossPenalty)

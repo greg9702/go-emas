@@ -21,7 +21,7 @@ func NewLinearAgentComparator() *LinearAgentComparator {
 	return &lac
 }
 
-// Compare method used to compare two agents
+// Compare method used to compare two agents, returns true if the first passed agnet won, false otherwise
 func (lac *LinearAgentComparator) Compare(firstAgent i_agent.IAgent, secondAgent i_agent.IAgent) bool {
 	return lac.fitnessCalculator.CalculateFitness(firstAgent.Solution()) > lac.fitnessCalculator.CalculateFitness(secondAgent.Solution())
 }

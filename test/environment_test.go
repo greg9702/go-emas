@@ -28,7 +28,7 @@ func (m *mockAgent) ID() int64 {
 	return m.id
 }
 
-func (m *mockAgent) SetId(id int64) {
+func (m *mockAgent) SetID(id int64) {
 	m.id = id
 }
 

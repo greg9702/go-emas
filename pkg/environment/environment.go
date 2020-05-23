@@ -1,12 +1,14 @@
 package environment
 
 import (
+	"bufio"
 	"errors"
 	"fmt"
 	"go-emas/pkg/common_types"
 	"go-emas/pkg/i_agent"
 	"go-emas/pkg/population_factory"
 	"go-emas/pkg/stopper"
+	"os"
 	"strconv"
 )
 
@@ -55,19 +57,19 @@ func (e *Environment) Start() error {
 	var i int = 0
 
 	for {
-		i++
+		fmt.Printf("Iteration number: %d\n", i)
 
 		e.TagAgents()
-
 		e.executeActions()
 
 		e.ShowMap()
-		fmt.Println("Running...")
 
 		if e.stopper.Stop(i) {
 			fmt.Println("Stop condition met")
 			break
 		}
+		i++
+		_, _ = bufio.NewReader(os.Stdin).ReadString('\n')
 	}
 
 	return nil
@@ -110,7 +112,7 @@ func (e *Environment) DeleteFromPopulation(id int64) error {
 
 // AddToPopulation adds new record to population
 func (e *Environment) AddToPopulation(agent i_agent.IAgent) error {
-	agent.SetId(e.getMaxAgentId() + 1) // TODO improve IDs generation
+	agent.SetID(e.getMaxAgentID() + 1) // TODO improve IDs generation
 	_, ok := e.population[agent.ID()]
 	if ok {
 		return errors.New("Element with " + strconv.FormatInt(agent.ID(), 10) + " id already exists")
@@ -121,7 +123,7 @@ func (e *Environment) AddToPopulation(agent i_agent.IAgent) error {
 
 // ShowMap is a helper used to display current state of a population
 func (e *Environment) ShowMap() {
-	fmt.Println("[Environment] ", e.population)
+	fmt.Println(e.population)
 }
 
 // TagAgents each agent tags itself. Then all agents are marked to perform actions
@@ -146,12 +148,12 @@ func (e *Environment) executeActions() {
 	}
 }
 
-func (e *Environment) getMaxAgentId() int64 {
-	var maxId int64 = 0
+func (e *Environment) getMaxAgentID() int64 {
+	var maxID int64 = 0
 	for id := range e.population {
-		if id > maxId {
-			maxId = id
+		if id > maxID {
+			maxID = id
 		}
 	}
-	return maxId
+	return maxID
 }
