@@ -81,6 +81,7 @@ func (e *Environment) Start() error {
 			break
 		}
 		i++
+		// used to run step by step
 		// _, _ = bufio.NewReader(os.Stdin).ReadString('\n')
 	}
 

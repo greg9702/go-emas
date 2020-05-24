@@ -41,12 +41,13 @@ func BaseLog() *BaseLogger {
 
 // BaseLogger is a base implementaion of IRandomizer
 type BaseLogger struct {
-	logLevel   int
-	fileLogger *gloggger.Logger
+	logLevel    int
+	initialized bool
+	fileLogger  *gloggger.Logger
 }
 
 func newBaseLogger() *BaseLogger {
-	b := BaseLogger{15, &gloggger.Logger{}}
+	b := BaseLogger{15, false, &gloggger.Logger{}}
 	return &b
 }
 
@@ -55,37 +56,40 @@ func (b *BaseLogger) InitLogger(logLevel int, logFile io.Writer) {
 	b.fileLogger = logger.Init("FileLogger", false, false, logFile)
 	b.logLevel = logLevel
 	logger.SetFlags(log.LstdFlags)
+	b.initialized = true
 }
 
 // Debug used to log debug to console
 func (b *BaseLogger) Debug(message string) {
-	if b.logLevel&DebugLogs != 0 {
+	if b.initialized && b.logLevel&DebugLogs != 0 {
 		fmt.Println("[DEBUG] " + message)
 	}
 }
 
 // Info used to log info to console
 func (b *BaseLogger) Info(message string) {
-	if b.logLevel&InfoLogs != 0 {
+	if b.initialized && b.logLevel&InfoLogs != 0 {
 		fmt.Println("[INFO] " + message)
 	}
 }
 
 // Warning used to log warnings to console
 func (b *BaseLogger) Warning(message string) {
-	if b.logLevel&WarningLogs != 0 {
+	if b.initialized && b.logLevel&WarningLogs != 0 {
 		fmt.Println("[WARNING] " + message)
 	}
 }
 
 // Error used to log errors to console
 func (b *BaseLogger) Error(message string) {
-	if b.logLevel&ErrorLogs != 0 {
+	if b.initialized && b.logLevel&ErrorLogs != 0 {
 		fmt.Println("[ERROR] " + message)
 	}
 }
 
 // LogToFile used to log to file
 func (b *BaseLogger) LogToFile(message string) {
-	b.fileLogger.Info(message)
+	if b.initialized {
+		b.fileLogger.Info(message)
+	}
 }
