@@ -1,7 +1,6 @@
 package environment
 
 import (
-	"bufio"
 	"errors"
 	"go-emas/pkg/common_types"
 	"go-emas/pkg/i_agent"
@@ -9,7 +8,6 @@ import (
 	"go-emas/pkg/population_factory"
 	"go-emas/pkg/randomizer"
 	"go-emas/pkg/stopper"
-	"os"
 	"strconv"
 )
 
@@ -83,7 +81,7 @@ func (e *Environment) Start() error {
 			break
 		}
 		i++
-		_, _ = bufio.NewReader(os.Stdin).ReadString('\n')
+		// _, _ = bufio.NewReader(os.Stdin).ReadString('\n')
 	}
 
 	return nil
