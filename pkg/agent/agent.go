@@ -1,10 +1,10 @@
 package agent
 
 import (
-	"fmt"
 	"go-emas/pkg/common_types"
 	"go-emas/pkg/comparator"
 	"go-emas/pkg/i_agent"
+	"go-emas/pkg/logger"
 	"go-emas/pkg/randomizer"
 	"go-emas/pkg/tag_calculator"
 
@@ -106,8 +106,7 @@ func (a *Agent) fight() {
 	rival, err := a.getAgentByTagCallback(common_types.Fight)
 
 	if err != nil {
-		// TODO what about this cast?
-		fmt.Println("[Figth] Agent [" + strconv.Itoa(int(a.id)) + "] there is no rival for him")
+		logger.BaseLog().Debug("[Figth] Agent [" + strconv.Itoa(int(a.id)) + "] there is no rival for him")
 		return
 	}
 
@@ -123,7 +122,7 @@ func (a *Agent) fight() {
 		a.ModifyEnergy(-lossPenalty)
 		rival.ModifyEnergy(lossPenalty)
 	}
-	fmt.Println("[Figth] Agent [" + strconv.Itoa(int(a.id)) + "] vs Agnet [" + strconv.Itoa(int(rival.ID())) + "] result: " + result)
+	logger.BaseLog().Debug("[Figth] Agent [" + strconv.Itoa(int(a.id)) + "] vs Agnet [" + strconv.Itoa(int(rival.ID())) + "] result: " + result)
 }
 
 // Reproduce is used to perform fight action
@@ -148,10 +147,10 @@ func (a *Agent) reproduce() {
 
 	a.addAgentCallback(child)
 	a.ModifyEnergy(-newAgentEnergy)
-	fmt.Println("[Reproduce] Agent [" + strconv.Itoa(int(a.id)) + "] reproduced, spawned Agent [" + strconv.Itoa(int(child.ID())) + "]")
+	logger.BaseLog().Debug("[Reproduce] Agent [" + strconv.Itoa(int(a.id)) + "] reproduced, spawned Agent [" + strconv.Itoa(int(child.ID())) + "]")
 }
 
 func (a *Agent) die() {
-	fmt.Println("[Die] Agent [" + strconv.Itoa(int(a.id)) + "] died")
+	logger.BaseLog().Debug("[Die] Agent [" + strconv.Itoa(int(a.id)) + "] died")
 	a.deleteAgentCallback(a.id)
 }

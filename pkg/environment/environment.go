@@ -3,9 +3,9 @@ package environment
 import (
 	"bufio"
 	"errors"
-	"fmt"
 	"go-emas/pkg/common_types"
 	"go-emas/pkg/i_agent"
+	"go-emas/pkg/logger"
 	"go-emas/pkg/population_factory"
 	"go-emas/pkg/randomizer"
 	"go-emas/pkg/stopper"
@@ -63,28 +63,27 @@ func (e *Environment) Start() error {
 	var i int = 0
 
 	for {
-		fmt.Printf("############ Iteration number: %d ############\n", i)
+		logger.BaseLog().Info("############ Iteration number: " + strconv.Itoa(i) + " ############")
 
-		fmt.Println("--------------------------")
-		fmt.Println("Agents before iteration: ")
-		fmt.Println("--------------------------")
+		logger.BaseLog().Debug("--------------------------")
+		logger.BaseLog().Debug("Agents before iteration: ")
+		logger.BaseLog().Debug("--------------------------")
 
 		e.ShowMap()
 
-		fmt.Println("--------------------------")
-		fmt.Println("Events: ")
-		fmt.Println("--------------------------")
+		logger.BaseLog().Debug("--------------------------")
+		logger.BaseLog().Debug("Events: ")
+		logger.BaseLog().Debug("--------------------------")
 
 		e.TagAgents()
 		e.executeActions()
 
 		if e.stopper.Stop(i) {
-			fmt.Println("Stop condition met")
+			logger.BaseLog().Info("Stop condition met")
 			break
 		}
 		i++
 		_, _ = bufio.NewReader(os.Stdin).ReadString('\n')
-		fmt.Println("")
 	}
 
 	return nil
@@ -138,8 +137,10 @@ func (e *Environment) AddToPopulation(agent i_agent.IAgent) error {
 // ShowMap is a helper used to display current state of a population
 func (e *Environment) ShowMap() {
 	for _, v := range e.population {
-		fmt.Println(v)
+		logger.BaseLog().Debug(v.String())
+		logger.BaseLog().LogToFile(v.String() + "\n")
 	}
+	logger.BaseLog().LogToFile("-")
 }
 
 // TagAgents each agent tags itself. Then all agents are marked to perform actions
