@@ -1,0 +1,501 @@
+Agent 2 solution: 9 energy: 40
+Agent 3 solution: 6 energy: 40
+Agent 0 solution: 9 energy: 40
+Agent 1 solution: 10 energy: 40
+-
+Agent 0 solution: 9 energy: 20
+Agent 1 solution: 10 energy: 60
+Agent 2 solution: 9 energy: 60
+Agent 3 solution: 6 energy: 20
+-
+Agent 0 solution: 9 energy: 0
+Agent 1 solution: 10 energy: 80
+Agent 2 solution: 9 energy: 80
+Agent 3 solution: 6 energy: 0
+-
+Agent 2 solution: 9 energy: 40
+Agent 4 solution: 9 energy: 40
+Agent 3 solution: 5 energy: 40
+Agent 1 solution: 10 energy: 40
+-
+Agent 3 solution: 5 energy: 20
+Agent 1 solution: 10 energy: 60
+Agent 2 solution: 9 energy: 60
+Agent 4 solution: 9 energy: 20
+-
+Agent 3 solution: 5 energy: 0
+Agent 1 solution: 10 energy: 80
+Agent 2 solution: 9 energy: 40
+Agent 4 solution: 9 energy: 40
+-
+Agent 5 solution: 5 energy: 40
+Agent 1 solution: 10 energy: 40
+Agent 2 solution: 9 energy: 20
+Agent 4 solution: 9 energy: 60
+-
+Agent 5 solution: 5 energy: 20
+Agent 1 solution: 10 energy: 60
+Agent 2 solution: 9 energy: 0
+Agent 4 solution: 9 energy: 80
+-
+Agent 5 solution: 5 energy: 0
+Agent 1 solution: 10 energy: 80
+Agent 6 solution: 9 energy: 40
+Agent 4 solution: 9 energy: 40
+-
+Agent 7 solution: 15 energy: 40
+Agent 1 solution: 10 energy: 40
+Agent 6 solution: 9 energy: 20
+Agent 4 solution: 9 energy: 60
+-
+Agent 1 solution: 10 energy: 60
+Agent 6 solution: 9 energy: 0
+Agent 4 solution: 9 energy: 40
+Agent 7 solution: 15 energy: 60
+-
+Agent 4 solution: 9 energy: 20
+Agent 7 solution: 15 energy: 80
+Agent 1 solution: 10 energy: 60
+-
+Agent 7 solution: 15 energy: 40
+Agent 1 solution: 10 energy: 80
+Agent 8 solution: 16 energy: 40
+Agent 4 solution: 9 energy: 0
+-
+Agent 7 solution: 15 energy: 20
+Agent 1 solution: 10 energy: 40
+Agent 8 solution: 16 energy: 60
+Agent 9 solution: 9 energy: 40
+-
+Agent 7 solution: 15 energy: 40
+Agent 1 solution: 10 energy: 20
+Agent 8 solution: 16 energy: 80
+Agent 9 solution: 9 energy: 20
+-
+Agent 7 solution: 15 energy: 60
+Agent 1 solution: 10 energy: 0
+Agent 8 solution: 16 energy: 40
+Agent 9 solution: 9 energy: 20
+Agent 10 solution: 13 energy: 40
+-
+Agent 7 solution: 15 energy: 80
+Agent 8 solution: 16 energy: 60
+Agent 9 solution: 9 energy: 0
+Agent 10 solution: 13 energy: 20
+-
+Agent 8 solution: 16 energy: 80
+Agent 10 solution: 13 energy: 0
+Agent 7 solution: 15 energy: 40
+Agent 11 solution: 11 energy: 40
+-
+Agent 7 solution: 15 energy: 60
+Agent 11 solution: 11 energy: 20
+Agent 8 solution: 16 energy: 40
+Agent 12 solution: 10 energy: 40
+-
+Agent 11 solution: 11 energy: 0
+Agent 8 solution: 16 energy: 60
+Agent 12 solution: 10 energy: 20
+Agent 7 solution: 15 energy: 80
+-
+Agent 7 solution: 15 energy: 40
+Agent 13 solution: 21 energy: 40
+Agent 8 solution: 16 energy: 80
+Agent 12 solution: 10 energy: 0
+-
+Agent 7 solution: 15 energy: 20
+Agent 13 solution: 21 energy: 60
+Agent 8 solution: 16 energy: 40
+Agent 14 solution: 15 energy: 40
+-
+Agent 8 solution: 16 energy: 20
+Agent 14 solution: 15 energy: 60
+Agent 7 solution: 15 energy: 0
+Agent 13 solution: 21 energy: 80
+-
+Agent 14 solution: 15 energy: 40
+Agent 15 solution: 13 energy: 40
+Agent 13 solution: 21 energy: 40
+Agent 8 solution: 16 energy: 40
+-
+Agent 14 solution: 15 energy: 20
+Agent 15 solution: 13 energy: 20
+Agent 13 solution: 21 energy: 60
+Agent 8 solution: 16 energy: 60
+-
+Agent 15 solution: 13 energy: 0
+Agent 13 solution: 21 energy: 80
+Agent 8 solution: 16 energy: 80
+Agent 14 solution: 15 energy: 0
+-
+Agent 14 solution: 18 energy: 40
+Agent 13 solution: 21 energy: 40
+Agent 8 solution: 16 energy: 40
+Agent 15 solution: 23 energy: 40
+-
+Agent 13 solution: 21 energy: 20
+Agent 8 solution: 16 energy: 20
+Agent 15 solution: 23 energy: 60
+Agent 14 solution: 18 energy: 60
+-
+Agent 15 solution: 23 energy: 80
+Agent 14 solution: 18 energy: 80
+Agent 13 solution: 21 energy: 0
+Agent 8 solution: 16 energy: 0
+-
+Agent 14 solution: 18 energy: 40
+Agent 16 solution: 10 energy: 40
+Agent 17 solution: 17 energy: 40
+Agent 15 solution: 23 energy: 40
+-
+Agent 15 solution: 23 energy: 60
+Agent 14 solution: 18 energy: 20
+Agent 16 solution: 10 energy: 20
+Agent 17 solution: 17 energy: 60
+-
+Agent 14 solution: 18 energy: 40
+Agent 16 solution: 10 energy: 0
+Agent 17 solution: 17 energy: 40
+Agent 15 solution: 23 energy: 80
+-
+Agent 15 solution: 23 energy: 40
+Agent 14 solution: 18 energy: 60
+Agent 18 solution: 21 energy: 40
+Agent 17 solution: 17 energy: 20
+-
+Agent 14 solution: 18 energy: 80
+Agent 18 solution: 21 energy: 20
+Agent 17 solution: 17 energy: 0
+Agent 15 solution: 23 energy: 60
+-
+Agent 14 solution: 18 energy: 40
+Agent 18 solution: 21 energy: 0
+Agent 19 solution: 10 energy: 40
+Agent 15 solution: 23 energy: 80
+-
+Agent 19 solution: 10 energy: 20
+Agent 15 solution: 23 energy: 40
+Agent 14 solution: 18 energy: 60
+Agent 20 solution: 22 energy: 40
+-
+Agent 14 solution: 18 energy: 40
+Agent 20 solution: 22 energy: 60
+Agent 19 solution: 10 energy: 0
+Agent 15 solution: 23 energy: 60
+-
+Agent 14 solution: 18 energy: 20
+Agent 20 solution: 22 energy: 80
+Agent 15 solution: 23 energy: 60
+-
+Agent 14 solution: 18 energy: 0
+Agent 20 solution: 22 energy: 40
+Agent 21 solution: 22 energy: 40
+Agent 15 solution: 23 energy: 80
+-
+Agent 20 solution: 22 energy: 20
+Agent 21 solution: 22 energy: 60
+Agent 15 solution: 23 energy: 40
+Agent 22 solution: 28 energy: 40
+-
+Agent 22 solution: 28 energy: 60
+Agent 20 solution: 22 energy: 0
+Agent 21 solution: 22 energy: 80
+Agent 15 solution: 23 energy: 20
+-
+Agent 15 solution: 23 energy: 0
+Agent 22 solution: 28 energy: 80
+Agent 23 solution: 22 energy: 40
+Agent 21 solution: 22 energy: 40
+-
+Agent 22 solution: 28 energy: 40
+Agent 23 solution: 22 energy: 20
+Agent 21 solution: 22 energy: 60
+Agent 24 solution: 22 energy: 40
+-
+Agent 24 solution: 22 energy: 60
+Agent 22 solution: 28 energy: 60
+Agent 23 solution: 22 energy: 0
+Agent 21 solution: 22 energy: 40
+-
+Agent 22 solution: 28 energy: 80
+Agent 21 solution: 22 energy: 20
+Agent 24 solution: 22 energy: 60
+-
+Agent 24 solution: 22 energy: 80
+Agent 22 solution: 28 energy: 40
+Agent 25 solution: 16 energy: 40
+Agent 21 solution: 22 energy: 0
+-
+Agent 22 solution: 28 energy: 60
+Agent 25 solution: 16 energy: 20
+Agent 26 solution: 18 energy: 40
+Agent 24 solution: 22 energy: 40
+-
+Agent 22 solution: 28 energy: 80
+Agent 25 solution: 16 energy: 0
+Agent 26 solution: 18 energy: 60
+Agent 24 solution: 22 energy: 20
+-
+Agent 22 solution: 28 energy: 40
+Agent 27 solution: 25 energy: 40
+Agent 26 solution: 18 energy: 40
+Agent 24 solution: 22 energy: 40
+-
+Agent 22 solution: 28 energy: 60
+Agent 27 solution: 25 energy: 20
+Agent 26 solution: 18 energy: 20
+Agent 24 solution: 22 energy: 60
+-
+Agent 22 solution: 28 energy: 80
+Agent 27 solution: 25 energy: 40
+Agent 26 solution: 18 energy: 0
+Agent 24 solution: 22 energy: 40
+-
+Agent 22 solution: 28 energy: 40
+Agent 27 solution: 25 energy: 60
+Agent 28 solution: 20 energy: 40
+Agent 24 solution: 22 energy: 20
+-
+Agent 22 solution: 28 energy: 60
+Agent 27 solution: 25 energy: 40
+Agent 28 solution: 20 energy: 20
+Agent 24 solution: 22 energy: 40
+-
+Agent 24 solution: 22 energy: 20
+Agent 22 solution: 28 energy: 80
+Agent 27 solution: 25 energy: 60
+Agent 28 solution: 20 energy: 0
+-
+Agent 22 solution: 28 energy: 40
+Agent 27 solution: 25 energy: 80
+Agent 28 solution: 38 energy: 40
+Agent 24 solution: 22 energy: 0
+-
+Agent 27 solution: 25 energy: 40
+Agent 28 solution: 38 energy: 60
+Agent 29 solution: 30 energy: 40
+Agent 22 solution: 28 energy: 20
+-
+Agent 22 solution: 28 energy: 0
+Agent 27 solution: 25 energy: 20
+Agent 28 solution: 38 energy: 80
+Agent 29 solution: 30 energy: 60
+-
+Agent 30 solution: 53 energy: 40
+Agent 27 solution: 25 energy: 0
+Agent 28 solution: 38 energy: 40
+Agent 29 solution: 30 energy: 80
+-
+Agent 30 solution: 53 energy: 60
+Agent 31 solution: 45 energy: 40
+Agent 28 solution: 38 energy: 20
+Agent 29 solution: 30 energy: 40
+-
+Agent 28 solution: 38 energy: 0
+Agent 29 solution: 30 energy: 20
+Agent 30 solution: 53 energy: 80
+Agent 31 solution: 45 energy: 60
+-
+Agent 30 solution: 53 energy: 40
+Agent 31 solution: 45 energy: 80
+Agent 32 solution: 51 energy: 40
+Agent 29 solution: 30 energy: 0
+-
+Agent 31 solution: 45 energy: 40
+Agent 32 solution: 51 energy: 20
+Agent 33 solution: 52 energy: 40
+Agent 30 solution: 53 energy: 60
+-
+Agent 30 solution: 53 energy: 80
+Agent 31 solution: 45 energy: 20
+Agent 32 solution: 51 energy: 40
+Agent 33 solution: 52 energy: 20
+-
+Agent 30 solution: 53 energy: 40
+Agent 31 solution: 45 energy: 0
+Agent 32 solution: 51 energy: 60
+Agent 33 solution: 52 energy: 20
+Agent 34 solution: 48 energy: 40
+-
+Agent 30 solution: 53 energy: 60
+Agent 32 solution: 51 energy: 80
+Agent 33 solution: 52 energy: 0
+Agent 34 solution: 48 energy: 20
+-
+Agent 30 solution: 53 energy: 80
+Agent 35 solution: 66 energy: 40
+Agent 32 solution: 51 energy: 40
+Agent 34 solution: 48 energy: 0
+-
+Agent 30 solution: 53 energy: 40
+Agent 35 solution: 66 energy: 60
+Agent 32 solution: 51 energy: 20
+Agent 36 solution: 30 energy: 40
+-
+Agent 30 solution: 53 energy: 60
+Agent 35 solution: 66 energy: 80
+Agent 32 solution: 51 energy: 0
+Agent 36 solution: 30 energy: 20
+-
+Agent 35 solution: 66 energy: 40
+Agent 37 solution: 97 energy: 40
+Agent 36 solution: 30 energy: 0
+Agent 30 solution: 53 energy: 80
+-
+Agent 30 solution: 53 energy: 40
+Agent 35 solution: 66 energy: 20
+Agent 37 solution: 97 energy: 60
+Agent 38 solution: 39 energy: 40
+-
+Agent 38 solution: 39 energy: 20
+Agent 30 solution: 53 energy: 20
+Agent 35 solution: 66 energy: 40
+Agent 37 solution: 97 energy: 80
+-
+Agent 30 solution: 53 energy: 40
+Agent 35 solution: 66 energy: 40
+Agent 37 solution: 97 energy: 40
+Agent 38 solution: 39 energy: 0
+Agent 39 solution: 84 energy: 40
+-
+Agent 30 solution: 53 energy: 20
+Agent 35 solution: 66 energy: 60
+Agent 37 solution: 97 energy: 60
+Agent 39 solution: 84 energy: 20
+-
+Agent 30 solution: 53 energy: 0
+Agent 35 solution: 66 energy: 80
+Agent 37 solution: 97 energy: 80
+Agent 39 solution: 84 energy: 0
+-
+Agent 38 solution: 98 energy: 40
+Agent 35 solution: 66 energy: 40
+Agent 37 solution: 97 energy: 40
+Agent 39 solution: 119 energy: 40
+-
+Agent 38 solution: 98 energy: 20
+Agent 35 solution: 66 energy: 20
+Agent 37 solution: 97 energy: 60
+Agent 39 solution: 119 energy: 60
+-
+Agent 38 solution: 98 energy: 0
+Agent 35 solution: 66 energy: 0
+Agent 37 solution: 97 energy: 80
+Agent 39 solution: 119 energy: 80
+-
+Agent 40 solution: 61 energy: 40
+Agent 41 solution: 134 energy: 40
+Agent 37 solution: 97 energy: 40
+Agent 39 solution: 119 energy: 40
+-
+Agent 40 solution: 61 energy: 20
+Agent 41 solution: 134 energy: 60
+Agent 37 solution: 97 energy: 60
+Agent 39 solution: 119 energy: 20
+-
+Agent 40 solution: 61 energy: 0
+Agent 41 solution: 134 energy: 80
+Agent 37 solution: 97 energy: 40
+Agent 39 solution: 119 energy: 40
+-
+Agent 42 solution: 159 energy: 40
+Agent 41 solution: 134 energy: 40
+Agent 37 solution: 97 energy: 20
+Agent 39 solution: 119 energy: 60
+-
+Agent 42 solution: 159 energy: 60
+Agent 41 solution: 134 energy: 60
+Agent 37 solution: 97 energy: 0
+Agent 39 solution: 119 energy: 40
+-
+Agent 39 solution: 119 energy: 40
+Agent 42 solution: 159 energy: 80
+Agent 41 solution: 134 energy: 40
+-
+Agent 42 solution: 159 energy: 40
+Agent 41 solution: 134 energy: 60
+Agent 43 solution: 213 energy: 40
+Agent 39 solution: 119 energy: 20
+-
+Agent 42 solution: 159 energy: 60
+Agent 41 solution: 134 energy: 40
+Agent 43 solution: 213 energy: 60
+Agent 39 solution: 119 energy: 0
+-
+Agent 42 solution: 159 energy: 40
+Agent 41 solution: 134 energy: 40
+Agent 43 solution: 213 energy: 80
+-
+Agent 42 solution: 159 energy: 60
+Agent 41 solution: 134 energy: 20
+Agent 43 solution: 213 energy: 40
+Agent 44 solution: 298 energy: 40
+-
+Agent 42 solution: 159 energy: 40
+Agent 41 solution: 134 energy: 0
+Agent 43 solution: 213 energy: 60
+Agent 44 solution: 298 energy: 60
+-
+Agent 44 solution: 298 energy: 60
+Agent 42 solution: 159 energy: 20
+Agent 43 solution: 213 energy: 80
+-
+Agent 42 solution: 159 energy: 0
+Agent 45 solution: 144 energy: 40
+Agent 43 solution: 213 energy: 40
+Agent 44 solution: 298 energy: 80
+-
+Agent 46 solution: 192 energy: 40
+Agent 45 solution: 144 energy: 20
+Agent 43 solution: 213 energy: 60
+Agent 44 solution: 298 energy: 40
+-
+Agent 46 solution: 192 energy: 20
+Agent 45 solution: 144 energy: 0
+Agent 43 solution: 213 energy: 80
+Agent 44 solution: 298 energy: 60
+-
+Agent 46 solution: 192 energy: 0
+Agent 47 solution: 168 energy: 40
+Agent 43 solution: 213 energy: 40
+Agent 44 solution: 298 energy: 80
+-
+Agent 48 solution: 310 energy: 40
+Agent 47 solution: 168 energy: 20
+Agent 43 solution: 213 energy: 60
+Agent 44 solution: 298 energy: 40
+-
+Agent 43 solution: 213 energy: 40
+Agent 44 solution: 298 energy: 60
+Agent 48 solution: 310 energy: 60
+Agent 47 solution: 168 energy: 0
+-
+Agent 48 solution: 310 energy: 80
+Agent 43 solution: 213 energy: 20
+Agent 44 solution: 298 energy: 60
+-
+Agent 48 solution: 310 energy: 40
+Agent 49 solution: 345 energy: 40
+Agent 43 solution: 213 energy: 0
+Agent 44 solution: 298 energy: 80
+-
+Agent 48 solution: 310 energy: 20
+Agent 49 solution: 345 energy: 60
+Agent 50 solution: 333 energy: 40
+Agent 44 solution: 298 energy: 40
+-
+Agent 48 solution: 310 energy: 0
+Agent 49 solution: 345 energy: 80
+Agent 50 solution: 333 energy: 60
+Agent 44 solution: 298 energy: 20
+-
+Agent 51 solution: 516 energy: 40
+Agent 49 solution: 345 energy: 40
+Agent 50 solution: 333 energy: 80
+Agent 44 solution: 298 energy: 0
+-
+Agent 51 solution: 516 energy: 60
+Agent 49 solution: 345 energy: 20
+Agent 50 solution: 333 energy: 40
+Agent 52 solution: 223 energy: 40
+-

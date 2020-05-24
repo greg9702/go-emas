@@ -11,8 +11,8 @@ func TestTagCalculation(t *testing.T) {
 
 	t.Run("Test base cases", func(t *testing.T) {
 		testParams := []struct {
-			energy common_types.Energy
-			tag    common_types.ActionTag
+			energy int
+			tag    string
 		}{
 			{0, common_types.Death},
 			{20, common_types.Fight},

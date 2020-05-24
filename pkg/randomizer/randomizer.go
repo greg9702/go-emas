@@ -36,11 +36,8 @@ func newBaseRandomizer(seed int64) *BaseRandomizer {
 
 // RandInt returns random value from [min, max] interval, error while passed min > max or negative values
 func (b *BaseRandomizer) RandInt(min int, max int) (int, error) {
-	if min < 0 || min > max {
+	if min > max {
 		return 0, errors.New("Passed wrong values min: " + strconv.Itoa(min) + " max: " + strconv.Itoa(max))
 	}
-	if min == 0 {
-		return rand.Intn(max + 1), nil
-	}
-	return rand.Intn(max)%(max-min+1) + min, nil
+	return rand.Intn(max-min+1) + min, nil
 }

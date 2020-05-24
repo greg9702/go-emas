@@ -4,16 +4,21 @@ import "go-emas/pkg/common_types"
 
 // IFitnessCalculator is an interface for fitness calculators
 type IFitnessCalculator interface {
-	CalculateFitness(solution common_types.Solution) common_types.Fitness
+	CalculateFitness(solution common_types.Solution) int
 }
 
+// LinearFitnessCalculator represents linear function
 type LinearFitnessCalculator struct {
 }
 
-func NewLinearFitnessCalculator() LinearFitnessCalculator {
-	return LinearFitnessCalculator{}
+// NewLinearFitnessCalculator creates new LinearFitnessCalculator object
+func NewLinearFitnessCalculator() *LinearFitnessCalculator {
+	l := LinearFitnessCalculator{}
+	return &l
 }
 
-func (flc LinearFitnessCalculator) CalculateFitness(solution common_types.Solution) common_types.Fitness {
-	return common_types.Fitness(solution)
+// CalculateFitness calculate fitness value for passed soultion argument
+func (flc *LinearFitnessCalculator) CalculateFitness(solution common_types.Solution) int {
+	// TODO this cast cannot be used like this here
+	return int(solution)
 }
