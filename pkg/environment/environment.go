@@ -1,6 +1,7 @@
 package environment
 
 import (
+	"bufio"
 	"errors"
 	"go-emas/pkg/common_types"
 	"go-emas/pkg/i_agent"
@@ -8,7 +9,9 @@ import (
 	"go-emas/pkg/population_factory"
 	"go-emas/pkg/randomizer"
 	"go-emas/pkg/stopper"
+	"os"
 	"strconv"
+	"time"
 )
 
 // IEnvironment interface for environments
@@ -61,6 +64,8 @@ func (e *Environment) Start() error {
 	var i int = 0
 
 	for {
+		start := time.Now()
+
 		logger.BaseLog().Info("############ Iteration number: " + strconv.Itoa(i) + " ############")
 
 		logger.BaseLog().Debug("--------------------------")
@@ -81,8 +86,12 @@ func (e *Environment) Start() error {
 			break
 		}
 		i++
+		elapsed := time.Since(start)
+
+		logger.BaseLog().Debug("Iteration execution time: " + elapsed.String())
+
 		// used to run step by step
-		// _, _ = bufio.NewReader(os.Stdin).ReadString('\n')
+		_, _ = bufio.NewReader(os.Stdin).ReadString('\n')
 	}
 
 	return nil
