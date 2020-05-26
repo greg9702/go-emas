@@ -1,7 +1,6 @@
 package environment
 
 import (
-	"bufio"
 	"errors"
 	"go-emas/pkg/common_types"
 	"go-emas/pkg/i_agent"
@@ -9,9 +8,7 @@ import (
 	"go-emas/pkg/population_factory"
 	"go-emas/pkg/randomizer"
 	"go-emas/pkg/stopper"
-	"os"
 	"strconv"
-	"sync"
 	"time"
 )
 
@@ -73,7 +70,7 @@ func (e *Environment) Start() error {
 		logger.BaseLog().Debug("Agents before iteration: ")
 		logger.BaseLog().Debug("--------------------------")
 
-		e.ShowMap()
+		// e.ShowMap()
 
 		logger.BaseLog().Debug("--------------------------")
 		logger.BaseLog().Debug("Events: ")
@@ -89,10 +86,11 @@ func (e *Environment) Start() error {
 		i++
 		elapsed := time.Since(start)
 
-		logger.BaseLog().Debug("Iteration execution time: " + elapsed.String())
+		// logger.BaseLog().Debug("Iteration execution time: " + elapsed.String())
 
 		// used to run step by step
-		_, _ = bufio.NewReader(os.Stdin).ReadString('\n')
+		// _, _ = bufio.NewReader(os.Stdin).ReadString('\n')
+		logger.BaseLog().LogToFile(strconv.Itoa(i) + " " + strconv.FormatInt(elapsed.Milliseconds(), 10) + " " + strconv.Itoa(e.PopulationSize()))
 	}
 
 	return nil
@@ -157,25 +155,25 @@ func (e *Environment) TagAgents() {
 
 	e.agentsBeforeActions = make(map[string][]i_agent.IAgent)
 
-	var lock = sync.RWMutex{}
-	var wg sync.WaitGroup
+	// var lock = sync.RWMutex{}
+	// var wg sync.WaitGroup
 
 	for _, agent := range e.population {
 
 		agentToProcess := agent
-		wg.Add(1)
+		// wg.Add(1)
 
-		go func() {
-			agentToProcess.Tag()
+		// go func() {
+		agentToProcess.Tag()
 
-			lock.Lock()
-			e.agentsBeforeActions[agentToProcess.ActionTag()] = append(e.agentsBeforeActions[agentToProcess.ActionTag()], agentToProcess)
-			lock.Unlock()
+		// lock.Lock()
+		e.agentsBeforeActions[agentToProcess.ActionTag()] = append(e.agentsBeforeActions[agentToProcess.ActionTag()], agentToProcess)
+		// lock.Unlock()
 
-			wg.Done()
-		}()
+		// wg.Done()
+		// }()
 	}
-	wg.Wait()
+	// wg.Wait()
 }
 
 func (e *Environment) executeActions() {

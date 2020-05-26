@@ -11,7 +11,7 @@ import (
 	"os"
 )
 
-const populationSize = 1000
+const populationSize = 10000
 
 func usage() {
 	fmt.Println("usage: go run main.go -logFile <PATH_TO_LOG_FILE> -logLevel <LOGLEVEL>")
