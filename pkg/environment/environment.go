@@ -11,6 +11,7 @@ import (
 	"go-emas/pkg/stopper"
 	"os"
 	"strconv"
+	"sync"
 	"time"
 )
 
@@ -153,13 +154,28 @@ func (e *Environment) ShowMap() {
 
 // TagAgents each agent tags itself. Then all agents are marked to perform actions
 func (e *Environment) TagAgents() {
-	for _, agent := range e.population {
-		agent.Tag()
-	}
+
 	e.agentsBeforeActions = make(map[string][]i_agent.IAgent)
+
+	var lock = sync.RWMutex{}
+	var wg sync.WaitGroup
+
 	for _, agent := range e.population {
-		e.agentsBeforeActions[agent.ActionTag()] = append(e.agentsBeforeActions[agent.ActionTag()], agent)
+
+		agentToProcess := agent
+		wg.Add(1)
+
+		go func() {
+			agentToProcess.Tag()
+
+			lock.Lock()
+			e.agentsBeforeActions[agentToProcess.ActionTag()] = append(e.agentsBeforeActions[agentToProcess.ActionTag()], agentToProcess)
+			lock.Unlock()
+
+			wg.Done()
+		}()
 	}
+	wg.Wait()
 }
 
 func (e *Environment) executeActions() {
