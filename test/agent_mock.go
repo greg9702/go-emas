@@ -1,7 +1,7 @@
 package test
 
 import (
-	"go-emas/pkg/common_types"
+	"go-emas/pkg/solution"
 
 	"github.com/stretchr/testify/mock"
 )
@@ -20,10 +20,10 @@ func (m *MockAgent) SetID(id int64) {
 	m.Called()
 }
 
-func (m *MockAgent) Solution() common_types.Solution {
+func (m *MockAgent) Solution() solution.Solution {
 	args := m.Called()
 	// TODO this mock can be not sufficient if solution ever changes
-	return common_types.Solution(args.Int(0))
+	return *solution.NewIntSolution(args.Int(0))
 }
 
 func (m *MockAgent) ActionTag() string {

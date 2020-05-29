@@ -1,10 +1,10 @@
 package fitness_calculator
 
-import "go-emas/pkg/common_types"
+import "go-emas/pkg/solution"
 
 // IFitnessCalculator is an interface for fitness calculators
 type IFitnessCalculator interface {
-	CalculateFitness(solution common_types.Solution) int
+	CalculateFitness(solution solution.Solution) int
 }
 
 // LinearFitnessCalculator represents linear function
@@ -18,7 +18,7 @@ func NewLinearFitnessCalculator() *LinearFitnessCalculator {
 }
 
 // CalculateFitness calculate fitness value for passed soultion argument
-func (flc *LinearFitnessCalculator) CalculateFitness(solution common_types.Solution) int {
+func (flc *LinearFitnessCalculator) CalculateFitness(sol solution.Solution) int {
 	// TODO this cast cannot be used like this here
-	return int(solution)
+	return int(sol.(solution.IntSolution).Solution())
 }

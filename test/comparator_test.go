@@ -1,7 +1,6 @@
 package test
 
 import (
-	"go-emas/pkg/common_types"
 	"go-emas/pkg/comparator"
 	"testing"
 )
@@ -11,8 +10,8 @@ func TestLinearAgentComparator(t *testing.T) {
 
 	t.Run("Test base cases", func(t *testing.T) {
 		testParams := []struct {
-			agentsSolution common_types.Solution
-			rivalsSolution common_types.Solution
+			agentsSolution int
+			rivalsSolution int
 			result         bool
 		}{
 			{1, 2, false},
@@ -22,8 +21,8 @@ func TestLinearAgentComparator(t *testing.T) {
 		for _, param := range testParams {
 			agent := new(MockAgent)
 			rival := new(MockAgent)
-			agent.On("Solution").Return(int(param.agentsSolution))
-			rival.On("Solution").Return(int(param.rivalsSolution))
+			agent.On("Solution").Return(param.agentsSolution)
+			rival.On("Solution").Return(param.rivalsSolution)
 
 			result := sut.Compare(agent, rival)
 			if result != param.result {
