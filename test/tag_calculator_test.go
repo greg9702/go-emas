@@ -1,7 +1,7 @@
 package test
 
 import (
-	"go-emas/pkg/common_types"
+	"go-emas/pkg/common"
 	"go-emas/pkg/tag_calculator"
 	"testing"
 )
@@ -14,10 +14,10 @@ func TestTagCalculation(t *testing.T) {
 			energy int
 			tag    string
 		}{
-			{0, common_types.Death},
-			{20, common_types.Fight},
-			{80, common_types.Reproduction},
-			{81, common_types.Reproduction},
+			{0, common.Death},
+			{20, common.Fight},
+			{80, common.Reproduction},
+			{81, common.Reproduction},
 		}
 
 		for _, param := range testParams {

@@ -21,7 +21,6 @@ func NewLinearFitnessCalculator() *LinearFitnessCalculator {
 
 // CalculateFitness calculate fitness value for passed soultion argument
 func (flc *LinearFitnessCalculator) CalculateFitness(sol solution.ISolution) int {
-	// TODO this cast cannot be used like this here
 	return int(sol.(*solution.IntSolution).Solution())
 }
 

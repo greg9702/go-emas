@@ -2,7 +2,7 @@ package agent
 
 import (
 	"fmt"
-	"go-emas/pkg/common_types"
+	"go-emas/pkg/common"
 	"go-emas/pkg/comparator"
 	"go-emas/pkg/i_agent"
 	"go-emas/pkg/logger"
@@ -12,9 +12,6 @@ import (
 
 	"strconv"
 )
-
-const lossPenalty int = 20
-const mutationRate float32 = 0.5
 
 // percent of current parent energy passed to a child as inital energy value
 const energyPercentageToChild float32 = 0.5
@@ -105,7 +102,7 @@ func (a *Agent) Execute() {
 
 // Fight is used to perform fight action
 func (a *Agent) fight() {
-	rival, err := a.getAgentByTagCallback(common_types.Fight)
+	rival, err := a.getAgentByTagCallback(common.Fight)
 
 	if err != nil {
 		logger.BaseLog().Debug("[Figth] Agent [" + strconv.Itoa(int(a.id)) + "] there is no rival for him")
@@ -117,12 +114,12 @@ func (a *Agent) fight() {
 
 	if won {
 		result = "1:0"
-		a.ModifyEnergy(lossPenalty)
-		rival.ModifyEnergy(-lossPenalty)
+		a.ModifyEnergy(common.LossPenalty)
+		rival.ModifyEnergy(-common.LossPenalty)
 	} else {
 		result = "0:1"
-		a.ModifyEnergy(-lossPenalty)
-		rival.ModifyEnergy(lossPenalty)
+		a.ModifyEnergy(-common.LossPenalty)
+		rival.ModifyEnergy(common.LossPenalty)
 	}
 	logger.BaseLog().Debug("[Figth] Agent [" + strconv.Itoa(int(a.id)) + "] vs Agnet [" + strconv.Itoa(int(rival.ID())) + "] result: " + result)
 }
@@ -137,7 +134,7 @@ func (a *Agent) reproduce() {
 
 	child := NewAgent(newAgentID,
 		newAgentSolution,
-		common_types.Fight,
+		common.Fight,
 		newAgentEnergy,
 		a.tagCalculator,
 		a.agentComparator,

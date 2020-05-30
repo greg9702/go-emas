@@ -3,7 +3,7 @@ package environment
 import (
 	"bufio"
 	"errors"
-	"go-emas/pkg/common_types"
+	"go-emas/pkg/common"
 	"go-emas/pkg/i_agent"
 	"go-emas/pkg/logger"
 	"go-emas/pkg/population_factory"
@@ -179,7 +179,7 @@ func (e *Environment) TagAgents() {
 }
 
 func (e *Environment) executeActions() {
-	actions := []string{common_types.Death, common_types.Reproduction, common_types.Fight}
+	actions := []string{common.Death, common.Reproduction, common.Fight}
 	for _, action := range actions {
 		for len(e.agentsBeforeActions[action]) > 0 {
 			currentExecutor := e.agentsBeforeActions[action][0]

@@ -2,7 +2,7 @@ package test
 
 import (
 	"errors"
-	"go-emas/pkg/common_types"
+	"go-emas/pkg/common"
 	"go-emas/pkg/environment"
 	"go-emas/pkg/i_agent"
 	"testing"
@@ -155,7 +155,7 @@ func TestGetAgentByTag(t *testing.T) {
 		population := make(map[int64]i_agent.IAgent)
 		for i := 0; i < populationSize; i++ {
 			mockAgent := new(MockAgent)
-			mockAgent.On("ActionTag").Return(common_types.Death)
+			mockAgent.On("ActionTag").Return(common.Death)
 			mockAgent.On("Tag").Return(nil)
 			population[int64(i+1)] = mockAgent
 		}
@@ -166,7 +166,7 @@ func TestGetAgentByTag(t *testing.T) {
 	sut.TagAgents()
 
 	t.Run("Return error when there is no agent with specified tag", func(t *testing.T) {
-		actionNotAvail := common_types.Reproduction
+		actionNotAvail := common.Reproduction
 		_, err := sut.GetAgentByTag(actionNotAvail)
 		if err == nil {
 			t.Errorf("There was no agent with specified tag in population, but GetAgentByTag reported no error")
@@ -174,7 +174,7 @@ func TestGetAgentByTag(t *testing.T) {
 	})
 
 	t.Run("Return agent with specified tag as long as there is one", func(t *testing.T) {
-		action := common_types.Death
+		action := common.Death
 		for i := 0; i < populationSize; i++ {
 			_, err := sut.GetAgentByTag(action)
 			if err != nil {
@@ -184,7 +184,7 @@ func TestGetAgentByTag(t *testing.T) {
 	})
 
 	t.Run("Return error when there were agents with specified tag, but all of them have done action", func(t *testing.T) {
-		action := common_types.Death
+		action := common.Death
 		_, err := sut.GetAgentByTag(action)
 		if err == nil {
 			t.Errorf("There was no agent with specified tag in population, but GetAgentByTag reported no error")
@@ -201,7 +201,7 @@ func TestExecutionFlow(t *testing.T) {
 		population := make(map[int64]i_agent.IAgent)
 		for i := 0; i < populationSize; i++ {
 			mockAgents[i] = new(MockAgent)
-			mockAgents[i].On("ActionTag").Return(common_types.Death)
+			mockAgents[i].On("ActionTag").Return(common.Death)
 			mockAgents[i].On("Tag").Return(nil)
 			mockAgents[i].On("Execute").Return(nil)
 			population[int64(i+1)] = mockAgents[i]

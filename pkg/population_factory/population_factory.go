@@ -2,7 +2,7 @@ package population_factory
 
 import (
 	"go-emas/pkg/agent"
-	"go-emas/pkg/common_types"
+	"go-emas/pkg/common"
 	"go-emas/pkg/comparator"
 	"go-emas/pkg/fitness_calculator"
 	"go-emas/pkg/i_agent"
@@ -49,7 +49,7 @@ func (b *BasicPopulationFactroy) CreatePopulation(populationSize int,
 		energy := 40
 		population[int64(i)] = agent.NewAgent(int64(i),
 			solution.ISolution(agentSolution),
-			common_types.Fight,
+			common.Fight,
 			energy,
 			tagCalculator,
 			agentComparator,
