@@ -6,6 +6,7 @@ import "go-emas/pkg/solution"
 type IAgent interface {
 	ID() int64
 	Solution() solution.ISolution
+	Fitness() int
 	ActionTag() string
 	Energy() int
 	ModifyEnergy(energyDelta int)

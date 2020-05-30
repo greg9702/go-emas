@@ -3,6 +3,7 @@ package agent
 import (
 	"go-emas/pkg/common"
 	"go-emas/pkg/comparator"
+	"go-emas/pkg/fitness_calculator"
 	"go-emas/pkg/i_agent"
 	"go-emas/pkg/logger"
 	"go-emas/pkg/randomizer"
@@ -19,10 +20,12 @@ const energyPercentageToChild float32 = 0.5
 type Agent struct {
 	id                    int64
 	solution              solution.ISolution
+	fitness               int
 	actionTag             string
 	energy                int
 	tagCalculator         tag_calculator.ITagCalulator
 	agentComparator       comparator.IAgentComparator
+	fitnessCalculator     fitness_calculator.IFitnessCalculator
 	randomizer            randomizer.IRandomizer
 	getAgentByTagCallback func(tag string) (i_agent.IAgent, error)
 	deleteAgentCallback   func(id int64) error
@@ -39,8 +42,10 @@ func NewAgent(
 	randomizer randomizer.IRandomizer,
 	getAgentByTagCallback func(tag string) (i_agent.IAgent, error),
 	deleteAgentCallback func(id int64) error,
-	addAgentCallback func(newAgent i_agent.IAgent) error) i_agent.IAgent {
-	a := Agent{id, solution, actionTag, energy, tagCalculator, agentComparator, randomizer, getAgentByTagCallback, deleteAgentCallback, addAgentCallback}
+	addAgentCallback func(newAgent i_agent.IAgent) error,
+	fitnessCalculator fitness_calculator.IFitnessCalculator) i_agent.IAgent {
+	fitness := fitnessCalculator.CalculateFitness(solution)
+	a := Agent{id, solution, fitness, actionTag, energy, tagCalculator, agentComparator, fitnessCalculator, randomizer, getAgentByTagCallback, deleteAgentCallback, addAgentCallback}
 	return &a
 }
 
@@ -57,6 +62,10 @@ func (a *Agent) SetID(id int64) {
 // Solution returns agent solution
 func (a *Agent) Solution() solution.ISolution {
 	return a.solution
+}
+
+func (a *Agent) Fitness() int {
+	return a.fitness
 }
 
 // ActionTag returns agent tag
@@ -140,7 +149,8 @@ func (a *Agent) reproduce() {
 		a.randomizer,
 		a.getAgentByTagCallback,
 		a.deleteAgentCallback,
-		a.addAgentCallback)
+		a.addAgentCallback,
+		a.fitnessCalculator)
 
 	a.addAgentCallback(child)
 	a.ModifyEnergy(-newAgentEnergy)

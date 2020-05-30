@@ -38,7 +38,7 @@ func (b *BasicPopulationFactroy) CreatePopulation(populationSize int,
 	var population = make(map[int64]i_agent.IAgent)
 	randomizer := randomizer.BaseRand()
 	tagCalculator := tag_calculator.NewTagCalculator()
-	agentComparator := comparator.NewBasicAgentComparator(fitness_calculator.NewBitSetFitnessCalculator())
+	agentComparator := comparator.NewBasicAgentComparator()
 
 	for i := 0; i < populationSize; i++ {
 
@@ -56,7 +56,8 @@ func (b *BasicPopulationFactroy) CreatePopulation(populationSize int,
 			randomizer,
 			getAgentByTagCallback,
 			deleteAgentCallback,
-			addAgentCallback)
+			addAgentCallback,
+			fitness_calculator.NewBitSetFitnessCalculator())
 	}
 	return population, nil
 }
