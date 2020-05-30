@@ -6,7 +6,7 @@ type MockStopper struct {
 	mock.Mock
 }
 
-func (m *MockStopper) Stop(iteration int) bool {
+func (m *MockStopper) Stop() bool {
 	args := m.Called()
 	return args.Bool(0)
 }

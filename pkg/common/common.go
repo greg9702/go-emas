@@ -3,6 +3,7 @@ package common
 const MutationRate = 0.5
 const BitSetLength = 50
 const LossPenalty = 20
+const MaxIters = 1
 
 const (
 	Death        string = "Death"

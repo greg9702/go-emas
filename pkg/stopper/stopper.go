@@ -1,23 +1,25 @@
 package stopper
 
+import "go-emas/pkg/common"
+
 // IStopper interface for all stopper modules
 type IStopper interface {
-	Stop(iteration int) bool
+	Stop() bool
 }
-
-const maxIters = 1000
 
 // IterationBasedStopper is a stopper which use
 type IterationBasedStopper struct {
+	currentIteration int
 }
 
 // NewIterationBasedStopper creates new IterationBasedStopper object
 func NewIterationBasedStopper() *IterationBasedStopper {
-	i := IterationBasedStopper{}
+	i := IterationBasedStopper{0}
 	return &i
 }
 
 // Stop returns true when iteration greater or equal maxIters
-func (i *IterationBasedStopper) Stop(iteration int) bool {
-	return iteration >= maxIters
+func (i *IterationBasedStopper) Stop() bool {
+	i.currentIteration++
+	return i.currentIteration >= common.MaxIters
 }

@@ -82,7 +82,7 @@ func (e *Environment) Start() error {
 		e.TagAgents()
 		e.executeActions()
 
-		if e.stopper.Stop(i) {
+		if e.stopper.Stop() {
 			logger.BaseLog().Info("Stop condition met")
 			break
 		}
@@ -94,6 +94,10 @@ func (e *Environment) Start() error {
 		// used to run step by step
 		_, _ = bufio.NewReader(os.Stdin).ReadString('\n')
 	}
+
+	logger.BaseLog().Debug("--------------------------")
+	logger.BaseLog().Debug("After completing all iterations: ")
+	e.ShowMap()
 
 	return nil
 }

@@ -1,7 +1,6 @@
 package agent
 
 import (
-	"fmt"
 	"go-emas/pkg/common"
 	"go-emas/pkg/comparator"
 	"go-emas/pkg/i_agent"
@@ -145,7 +144,6 @@ func (a *Agent) reproduce() {
 
 	a.addAgentCallback(child)
 	a.ModifyEnergy(-newAgentEnergy)
-	fmt.Println(a.solution)
 	logger.BaseLog().Debug("[Reproduce] Agent [" + strconv.Itoa(int(a.id)) + "] reproduced, spawned Agent [" + strconv.Itoa(int(child.ID())) + "]")
 }
 

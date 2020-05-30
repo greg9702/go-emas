@@ -83,7 +83,7 @@ func (i BitSetSolution) Solution() *bitset.BitSet {
 	return &i.solution
 }
 
-// TODO make random
+// Mutate returns similar ISolution that differs from the original one. It does not modify the original object
 func (i BitSetSolution) Mutate() ISolution {
 	idx, _ := randomizer.BaseRand().RandInt(0, common.BitSetLength-1)
 	oldSolution := i.Solution().Clone()
