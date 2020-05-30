@@ -1,10 +1,12 @@
 package fitness_calculator
 
-import "go-emas/pkg/solution"
+import (
+	"go-emas/pkg/solution"
+)
 
 // IFitnessCalculator is an interface for fitness calculators
 type IFitnessCalculator interface {
-	CalculateFitness(solution solution.Solution) int
+	CalculateFitness(solution solution.ISolution) int
 }
 
 // LinearFitnessCalculator represents linear function
@@ -18,7 +20,22 @@ func NewLinearFitnessCalculator() *LinearFitnessCalculator {
 }
 
 // CalculateFitness calculate fitness value for passed soultion argument
-func (flc *LinearFitnessCalculator) CalculateFitness(sol solution.Solution) int {
+func (flc *LinearFitnessCalculator) CalculateFitness(sol solution.ISolution) int {
 	// TODO this cast cannot be used like this here
-	return int(sol.(solution.IntSolution).Solution())
+	return int(sol.(*solution.IntSolution).Solution())
+}
+
+// BitSetFitnessCalculator represents function that counts set bits
+type BitSetFitnessCalculator struct {
+}
+
+// NewBitSetFitnessCalculator creates new BitSetFitnessCalculator object
+func NewBitSetFitnessCalculator() *BitSetFitnessCalculator {
+	l := BitSetFitnessCalculator{}
+	return &l
+}
+
+// CalculateFitness calculate fitness value for passed soultion argument - count bits that are set
+func (flc *BitSetFitnessCalculator) CalculateFitness(sol solution.ISolution) int {
+	return int(sol.(*solution.BitSetSolution).Solution().Count())
 }

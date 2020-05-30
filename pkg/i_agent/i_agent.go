@@ -5,7 +5,7 @@ import "go-emas/pkg/solution"
 // IAgent is an interface for agents
 type IAgent interface {
 	ID() int64
-	Solution() solution.Solution
+	Solution() solution.ISolution
 	ActionTag() string
 	Energy() int
 	ModifyEnergy(energyDelta int)

@@ -10,18 +10,18 @@ type IAgentComparator interface {
 	Compare(firstAgent i_agent.IAgent, secondAgent i_agent.IAgent) bool
 }
 
-// LinearAgentComparator treat agent with higher solution wins
-type LinearAgentComparator struct {
+// BasicAgentComparator treat agent with higher solution wins
+type BasicAgentComparator struct {
 	fitnessCalculator fitness_calculator.IFitnessCalculator
 }
 
-// NewLinearAgentComparator creates new LinearAgentComparator object
-func NewLinearAgentComparator() *LinearAgentComparator {
-	lac := LinearAgentComparator{fitness_calculator.NewLinearFitnessCalculator()}
+// NewBasicAgentComparator creates new BasicAgentComparator object
+func NewBasicAgentComparator(fitness_calculator fitness_calculator.IFitnessCalculator) *BasicAgentComparator {
+	lac := BasicAgentComparator{fitness_calculator}
 	return &lac
 }
 
 // Compare method used to compare two agents, returns true if the first passed agnet won, false otherwise
-func (lac *LinearAgentComparator) Compare(firstAgent i_agent.IAgent, secondAgent i_agent.IAgent) bool {
+func (lac *BasicAgentComparator) Compare(firstAgent i_agent.IAgent, secondAgent i_agent.IAgent) bool {
 	return lac.fitnessCalculator.CalculateFitness(firstAgent.Solution()) > lac.fitnessCalculator.CalculateFitness(secondAgent.Solution())
 }

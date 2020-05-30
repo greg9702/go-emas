@@ -1,6 +1,7 @@
 package agent
 
 import (
+	"fmt"
 	"go-emas/pkg/common_types"
 	"go-emas/pkg/comparator"
 	"go-emas/pkg/i_agent"
@@ -21,7 +22,7 @@ const energyPercentageToChild float32 = 0.5
 // Agent struct represent an Agent
 type Agent struct {
 	id                    int64
-	solution              solution.Solution
+	solution              solution.ISolution
 	actionTag             string
 	energy                int
 	tagCalculator         tag_calculator.ITagCalulator
@@ -35,7 +36,7 @@ type Agent struct {
 // NewAgent creates new Agent object
 func NewAgent(
 	id int64,
-	solution solution.Solution,
+	solution solution.ISolution,
 	actionTag string, energy int,
 	tagCalculator tag_calculator.ITagCalulator,
 	agentComparator comparator.IAgentComparator,
@@ -58,7 +59,7 @@ func (a *Agent) SetID(id int64) {
 }
 
 // Solution returns agent solution
-func (a *Agent) Solution() solution.Solution {
+func (a *Agent) Solution() solution.ISolution {
 	return a.solution
 }
 
@@ -147,6 +148,7 @@ func (a *Agent) reproduce() {
 
 	a.addAgentCallback(child)
 	a.ModifyEnergy(-newAgentEnergy)
+	fmt.Println(a.solution)
 	logger.BaseLog().Debug("[Reproduce] Agent [" + strconv.Itoa(int(a.id)) + "] reproduced, spawned Agent [" + strconv.Itoa(int(child.ID())) + "]")
 }
 

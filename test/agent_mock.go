@@ -20,10 +20,10 @@ func (m *MockAgent) SetID(id int64) {
 	m.Called()
 }
 
-func (m *MockAgent) Solution() solution.Solution {
+// This mock works only for int solutions - for another types inheritance is needed - see MockAgentBitSetSolution
+func (m *MockAgent) Solution() solution.ISolution {
 	args := m.Called()
-	// TODO this mock can be not sufficient if solution ever changes
-	return *solution.NewIntSolution(args.Int(0))
+	return solution.NewIntSolution(args.Int(0))
 }
 
 func (m *MockAgent) ActionTag() string {

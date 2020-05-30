@@ -4,6 +4,7 @@ import (
 	"go-emas/pkg/agent"
 	"go-emas/pkg/common_types"
 	"go-emas/pkg/comparator"
+	"go-emas/pkg/fitness_calculator"
 	"go-emas/pkg/i_agent"
 	"go-emas/pkg/randomizer"
 	"go-emas/pkg/solution"
@@ -37,14 +38,17 @@ func (b *BasicPopulationFactroy) CreatePopulation(populationSize int,
 	var population = make(map[int64]i_agent.IAgent)
 	randomizer := randomizer.BaseRand()
 	tagCalculator := tag_calculator.NewTagCalculator()
-	agentComparator := comparator.NewLinearAgentComparator()
+	agentComparator := comparator.NewBasicAgentComparator(fitness_calculator.NewBitSetFitnessCalculator())
 
 	for i := 0; i < populationSize; i++ {
-		solutionValue, _ := randomizer.RandInt(0, 20)
-		agentSolution := solution.NewIntSolution(solutionValue)
+
+		agentSolution, err := solution.NewRandomBitSetSolution(2)
+		if err != nil {
+			return nil, err
+		}
 		energy := 40
 		population[int64(i)] = agent.NewAgent(int64(i),
-			solution.Solution(*agentSolution),
+			solution.ISolution(agentSolution),
 			common_types.Fight,
 			energy,
 			tagCalculator,
