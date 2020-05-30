@@ -5,6 +5,7 @@ import (
 	"go-emas/pkg/common"
 	"go-emas/pkg/environment"
 	"go-emas/pkg/i_agent"
+	"go-emas/pkg/top_fitness_observer"
 	"testing"
 
 	"github.com/stretchr/testify/mock"
@@ -21,7 +22,8 @@ type mockPopulationFactory struct{}
 func (m *mockPopulationFactory) CreatePopulation(populationSize int,
 	getAgentByTagCallback func(tag string) (i_agent.IAgent, error),
 	deleteAgentCallback func(id int64) error,
-	addAgentCallback func(newAgent i_agent.IAgent) error) (map[int64]i_agent.IAgent, error) {
+	addAgentCallback func(newAgent i_agent.IAgent) error,
+	topFitnessObserver top_fitness_observer.ITopFitnessObserver) (map[int64]i_agent.IAgent, error) {
 	return populationGeneratorMock(populationSize)
 }
 
@@ -38,7 +40,7 @@ func TestEnvironmentInit(t *testing.T) {
 		testParams := []int{-5, 0}
 
 		for _, param := range testParams {
-			_, err := environment.NewEnvironment(param, populationFactory, &MockStopper{}, &MockRandomizer{})
+			_, err := environment.NewEnvironment(param, populationFactory, &MockStopper{}, &MockRandomizer{}, &MockTopFitnessObserver{})
 			if err == nil {
 				t.Errorf("Should return error")
 			}
@@ -59,7 +61,7 @@ func TestEnvironmentInit(t *testing.T) {
 		}
 
 		for _, param := range testParams {
-			obj, err := environment.NewEnvironment(param, populationFactory, &MockStopper{}, &MockRandomizer{})
+			obj, err := environment.NewEnvironment(param, populationFactory, &MockStopper{}, &MockRandomizer{}, &MockTopFitnessObserver{})
 
 			got := obj.PopulationSize()
 			expected := param
@@ -90,7 +92,7 @@ func TestDeleteFromPopulation(t *testing.T) {
 
 	t.Run("Normal DeleteFromPopulation", func(t *testing.T) {
 
-		env, err := environment.NewEnvironment(populationSize, populationFactory, &MockStopper{}, &MockRandomizer{})
+		env, err := environment.NewEnvironment(populationSize, populationFactory, &MockStopper{}, &MockRandomizer{}, &MockTopFitnessObserver{})
 
 		var testID int64 = existingAgentId
 		err = env.DeleteFromPopulation(testID)
@@ -103,7 +105,7 @@ func TestDeleteFromPopulation(t *testing.T) {
 
 	t.Run("Error expected when trying to DeleteFromPopulation agent with id that does not exist", func(t *testing.T) {
 
-		env, err := environment.NewEnvironment(populationSize, populationFactory, &MockStopper{}, &MockRandomizer{})
+		env, err := environment.NewEnvironment(populationSize, populationFactory, &MockStopper{}, &MockRandomizer{}, &MockTopFitnessObserver{})
 
 		var testID int64 = 10
 		err = env.DeleteFromPopulation(testID)
@@ -130,7 +132,7 @@ func TestAddToPopulation(t *testing.T) {
 	}
 
 	t.Run("Add agent to population", func(t *testing.T) {
-		env, err := environment.NewEnvironment(populationSize, populationFactory, &MockStopper{}, &MockRandomizer{})
+		env, err := environment.NewEnvironment(populationSize, populationFactory, &MockStopper{}, &MockRandomizer{}, &MockTopFitnessObserver{})
 		newAgent := new(MockAgent)
 		uniqueId := populationSize + 1
 		newAgent.On("ID").Return(uniqueId)
@@ -162,7 +164,7 @@ func TestGetAgentByTag(t *testing.T) {
 		return population, nil
 	}
 
-	sut, _ := environment.NewEnvironment(populationSize, populationFactory, &MockStopper{}, &MockRandomizer{})
+	sut, _ := environment.NewEnvironment(populationSize, populationFactory, &MockStopper{}, &MockRandomizer{}, &MockTopFitnessObserver{})
 	sut.TagAgents()
 
 	t.Run("Return error when there is no agent with specified tag", func(t *testing.T) {
@@ -212,7 +214,7 @@ func TestExecutionFlow(t *testing.T) {
 	mockStopper := new(MockStopper)
 	mockStopper.On("Stop", mock.Anything).Return(true)
 
-	sut, _ := environment.NewEnvironment(populationSize, populationFactory, mockStopper, &MockRandomizer{})
+	sut, _ := environment.NewEnvironment(populationSize, populationFactory, mockStopper, &MockRandomizer{}, &MockTopFitnessObserver{})
 
 	sut.Start()
 	for _, mockAgent := range mockAgents {

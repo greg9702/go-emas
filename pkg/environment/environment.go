@@ -9,6 +9,7 @@ import (
 	"go-emas/pkg/population_factory"
 	"go-emas/pkg/randomizer"
 	"go-emas/pkg/stopper"
+	"go-emas/pkg/top_fitness_observer"
 	"os"
 	"strconv"
 	"sync"
@@ -31,24 +32,28 @@ type Environment struct {
 	agentsBeforeActions map[string][]i_agent.IAgent
 	stopper             stopper.IStopper
 	randomizer          randomizer.IRandomizer
+	topFitnessObserver  top_fitness_observer.ITopFitnessObserver
 }
 
 // NewEnvironment creates new Environment object
 func NewEnvironment(populationSize int,
 	populationFactory population_factory.IPopulationFactory,
 	stopper stopper.IStopper,
-	randomizer randomizer.IRandomizer) (*Environment, error) {
+	randomizer randomizer.IRandomizer,
+	topFitnessObserver top_fitness_observer.ITopFitnessObserver) (*Environment, error) {
 
 	var e = Environment{
-		population: make(map[int64]i_agent.IAgent),
-		stopper:    stopper,
-		randomizer: randomizer,
+		population:         make(map[int64]i_agent.IAgent),
+		stopper:            stopper,
+		randomizer:         randomizer,
+		topFitnessObserver: topFitnessObserver,
 	}
 
 	population, err := populationFactory.CreatePopulation(populationSize,
 		e.GetAgentByTag,
 		e.DeleteFromPopulation,
-		e.AddToPopulation)
+		e.AddToPopulation,
+		e.topFitnessObserver)
 
 	if err != nil {
 		return nil, err
@@ -144,6 +149,7 @@ func (e *Environment) AddToPopulation(agent i_agent.IAgent) error {
 		return errors.New("Element with " + strconv.FormatInt(agent.ID(), 10) + " id already exists")
 	}
 	e.population[agent.ID()] = agent
+	e.topFitnessObserver.Update(agent)
 	return nil
 }
 
