@@ -80,7 +80,7 @@ func (a *Agent) Energy() int {
 
 // String used to display agent struct using fmt
 func (a *Agent) String() string {
-	return "Agent [" + strconv.Itoa(int(a.id)) + "] solution: " + a.solution.String() + " energy: " + strconv.Itoa(a.energy)
+	return "Agent [" + strconv.Itoa(int(a.id)) + "] " + a.solution.String() + " fitness: " + strconv.Itoa(a.Fitness()) + " energy: " + strconv.Itoa(a.energy)
 }
 
 // ModifyEnergy is used to modify agent energy

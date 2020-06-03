@@ -45,7 +45,7 @@ func (b *BasicPopulationFactroy) CreatePopulation(populationSize int,
 
 	for i := 0; i < populationSize; i++ {
 
-		agentSolution, err := solution.NewRandomPairSolution(0, 10)
+		agentSolution, err := solution.NewRandomPairSolution(0, 1000)
 		if err != nil {
 			return nil, err
 		}

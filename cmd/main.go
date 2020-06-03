@@ -39,7 +39,7 @@ func main() {
 
 	var populationFactory = population_factory.NewBasicPopulationFactroy()
 	var topFitnessObserver = top_fitness_observer.NewTopFitnessObserver()
-	env, err := environment.NewEnvironment(populationSize, populationFactory, stopper.NewTopFitnessBasedStopper(topFitnessObserver), randomizer.BaseRand(), topFitnessObserver)
+	env, err := environment.NewEnvironment(populationSize, populationFactory, stopper.NewIterationBasedStopper(), randomizer.BaseRand(), topFitnessObserver)
 
 	if err != nil {
 		panic("Environment setup error")

@@ -1,7 +1,6 @@
 package environment
 
 import (
-	"bufio"
 	"errors"
 	"go-emas/pkg/common"
 	"go-emas/pkg/i_agent"
@@ -10,7 +9,6 @@ import (
 	"go-emas/pkg/randomizer"
 	"go-emas/pkg/stopper"
 	"go-emas/pkg/top_fitness_observer"
-	"os"
 	"strconv"
 	"sync"
 	"time"
@@ -97,7 +95,7 @@ func (e *Environment) Start() error {
 		logger.BaseLog().Debug("Iteration execution time: " + elapsed.String())
 
 		// used to run step by step
-		_, _ = bufio.NewReader(os.Stdin).ReadString('\n')
+		// _, _ = bufio.NewReader(os.Stdin).ReadString('\n')
 	}
 
 	logger.BaseLog().Debug("--------------------------")

@@ -93,10 +93,8 @@ func (i BitSetSolution) Mutate() ISolution {
 
 // String used to display solution - displays indexes of set bits
 func (i BitSetSolution) String() string {
-	// Alternative - display bits TODO decide what is much dercriptive
 	bitsView := i.solution.DumpAsBits()
 	return bitsView[len(bitsView)-common.BitSetLength-1:]
-	// return i.solution.String()
 }
 
 type PairSolution struct {
@@ -131,8 +129,10 @@ func (i PairSolution) Solution() (float64, float64) {
 
 // Mutate returns similar ISolution that differs from the original one. It does not modify the original object
 func (i PairSolution) Mutate() ISolution {
-	x1Delta, _ := randomizer.BaseRand().RandFloat64(-(float64(i.x1) * common.MutationRate), (float64(i.x1) * common.MutationRate))
-	x2Delta, _ := randomizer.BaseRand().RandFloat64(-(float64(i.x2) * common.MutationRate), (float64(i.x2) * common.MutationRate))
+	// x1Delta, _ := randomizer.BaseRand().RandFloat64(-(float64(i.x1) * common.MutationRate), (float64(i.x1) * common.MutationRate))
+	// x2Delta, _ := randomizer.BaseRand().RandFloat64(-(float64(i.x2) * common.MutationRate), (float64(i.x2) * common.MutationRate))
+	x1Delta, _ := randomizer.BaseRand().RandFloat64(-common.MaxMutationDelta, common.MaxMutationDelta)
+	x2Delta, _ := randomizer.BaseRand().RandFloat64(-common.MaxMutationDelta, common.MaxMutationDelta)
 
 	return NewPairSolution(i.x1+x1Delta, i.x2+x2Delta)
 }
