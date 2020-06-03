@@ -45,7 +45,7 @@ func (b *BasicPopulationFactroy) CreatePopulation(populationSize int,
 
 	for i := 0; i < populationSize; i++ {
 
-		agentSolution, err := solution.NewRandomBitSetSolution(2)
+		agentSolution, err := solution.NewRandomPairSolution(0, 10)
 		if err != nil {
 			return nil, err
 		}
@@ -60,7 +60,7 @@ func (b *BasicPopulationFactroy) CreatePopulation(populationSize int,
 			getAgentByTagCallback,
 			deleteAgentCallback,
 			addAgentCallback,
-			fitness_calculator.NewBitSetFitnessCalculator())
+			fitness_calculator.NewDejong1FitnessCalculator())
 		population[int64(i)] = newAgent
 		topFitnessObserver.Update(newAgent)
 	}

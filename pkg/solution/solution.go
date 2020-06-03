@@ -2,6 +2,7 @@ package solution
 
 import (
 	"errors"
+	"fmt"
 	"go-emas/pkg/common"
 	"go-emas/pkg/randomizer"
 
@@ -43,7 +44,7 @@ func (i IntSolution) Solution() int {
 
 // Mutate returns similar ISolution that differs from the original one. It does not modify the original object
 func (i IntSolution) Mutate() ISolution {
-	solutionDelta, _ := randomizer.BaseRand().RandInt(-int(float32(i.solution)*common.MutationRate), int(float32(i.solution)*common.MutationRate))
+	solutionDelta, _ := randomizer.BaseRand().RandInt(-int(float64(i.solution)*common.MutationRate), int(float64(i.solution)*common.MutationRate))
 	return NewIntSolution(i.solution + solutionDelta)
 }
 
@@ -96,4 +97,47 @@ func (i BitSetSolution) String() string {
 	bitsView := i.solution.DumpAsBits()
 	return bitsView[len(bitsView)-common.BitSetLength-1:]
 	// return i.solution.String()
+}
+
+type PairSolution struct {
+	x1 float64
+	x2 float64
+}
+
+// NewPairSolution returns solution of type pair with value passed (solution)
+func NewPairSolution(x1 float64, x2 float64) *PairSolution {
+	i := PairSolution{x1, x2}
+	return &i
+}
+
+// NewRandomPairSolution returns random solution of type pair. User has to specify the range from the points will be
+func NewRandomPairSolution(min float64, max float64) (*PairSolution, error) {
+	if min > max {
+		return nil, errors.New("Error in PairSolution creation - min > max!")
+	}
+	randomizer := randomizer.BaseRand()
+
+	x1, _ := randomizer.RandFloat64(min, max)
+	x2, _ := randomizer.RandFloat64(min, max)
+
+	agentSolution := NewPairSolution(x1, x2)
+	return agentSolution, nil
+}
+
+// Solution returns solution
+func (i PairSolution) Solution() (float64, float64) {
+	return i.x1, i.x2
+}
+
+// Mutate returns similar ISolution that differs from the original one. It does not modify the original object
+func (i PairSolution) Mutate() ISolution {
+	x1Delta, _ := randomizer.BaseRand().RandFloat64(-(float64(i.x1) * common.MutationRate), (float64(i.x1) * common.MutationRate))
+	x2Delta, _ := randomizer.BaseRand().RandFloat64(-(float64(i.x2) * common.MutationRate), (float64(i.x2) * common.MutationRate))
+
+	return NewPairSolution(i.x1+x1Delta, i.x2+x2Delta)
+}
+
+// String used to display solution - displays indexes of set bits
+func (i PairSolution) String() string {
+	return "x1: " + fmt.Sprintf("%f", i.x1) + " x2: " + fmt.Sprintf("%f", i.x2)
 }
