@@ -40,7 +40,7 @@ func (flc *BitSetFitnessCalculator) CalculateFitness(sol solution.ISolution) int
 	return int(sol.(*solution.BitSetSolution).Solution().Count())
 }
 
-// Dejong1FitnessCalculator represents function that counts set bits
+// Dejong1FitnessCalculator represents function that counts -dejongFunction1(x1,x2)
 type Dejong1FitnessCalculator struct {
 }
 
@@ -54,6 +54,24 @@ func NewDejong1FitnessCalculator() *Dejong1FitnessCalculator {
 func (flc *Dejong1FitnessCalculator) CalculateFitness(sol solution.ISolution) int {
 	x1, x2 := sol.(*solution.PairSolution).Solution()
 	fitness := 0 - (math.Pow(x1, 2) + math.Pow(x2, 2))
+
+	return int(fitness)
+}
+
+// RosenbrockFitnessCalculator represents function that counts -dejongFunction2(x1,x2)
+type RosenbrockFitnessCalculator struct {
+}
+
+// NewRosenbrockFitnessCalculator creates new RosenbrockFitnessCalculator object
+func NewRosenbrockFitnessCalculator() *RosenbrockFitnessCalculator {
+	l := RosenbrockFitnessCalculator{}
+	return &l
+}
+
+// CalculateFitness calculate fitness value for passed soultion argument - count bits that are set
+func (flc *RosenbrockFitnessCalculator) CalculateFitness(sol solution.ISolution) int {
+	x1, x2 := sol.(*solution.PairSolution).Solution()
+	fitness := 0 - 100*((x1-math.Pow(x2, 2))+math.Pow((1-x2), 2))
 
 	return int(fitness)
 }

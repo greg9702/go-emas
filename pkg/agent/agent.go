@@ -129,7 +129,7 @@ func (a *Agent) fight() {
 		a.ModifyEnergy(-common.LossPenalty)
 		rival.ModifyEnergy(common.LossPenalty)
 	}
-	logger.BaseLog().Debug("[Figth] Agent [" + strconv.Itoa(int(a.id)) + "] vs Agnet [" + strconv.Itoa(int(rival.ID())) + "] result: " + result)
+	logger.BaseLog().Debug("[Figth] Agent [" + strconv.Itoa(int(a.id)) + "] vs Agent [" + strconv.Itoa(int(rival.ID())) + "] result: " + result)
 }
 
 // Reproduce is used to perform fight action
