@@ -19,3 +19,20 @@ To run tests, run in project directory:
 ```
  go test test/* -v
 ```
+
+### Documentation
+
+Full project documentation can be found on [Wiki](https://github.com/greg9702/go-emas/wiki)
+
+### Results
+
+#### De Jong's function 1
+
+![Alt Text](https://i.imgur.com/HCVL2oP.gif)
+
+#### Rosenbrock's valley (De Jong's function 2)
+
+![Alt Text](https://i.imgur.com/bt0CyiE.gif)
+
+> More on [Wiki](https://github.com/greg9702/go-emas/wiki)
+
