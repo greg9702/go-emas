@@ -50,7 +50,7 @@ func (i IntSolution) Mutate() ISolution {
 
 // String used to display solution
 func (i IntSolution) String() string {
-	return strconv.Itoa(i.solution)
+	return "Solution: " + strconv.Itoa(i.solution)
 }
 
 type BitSetSolution struct {
@@ -94,7 +94,7 @@ func (i BitSetSolution) Mutate() ISolution {
 // String used to display solution - displays indexes of set bits
 func (i BitSetSolution) String() string {
 	bitsView := i.solution.DumpAsBits()
-	return bitsView[len(bitsView)-common.BitSetLength-1:]
+	return "Solution: " + bitsView[len(bitsView)-common.BitSetLength-1:]
 }
 
 type PairSolution struct {
