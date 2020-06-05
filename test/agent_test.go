@@ -2,16 +2,24 @@ package test
 
 import (
 	"go-emas/pkg/agent"
-	"go-emas/pkg/common_types"
+	"go-emas/pkg/common"
 	"go-emas/pkg/i_agent"
+	"go-emas/pkg/solution"
 	"testing"
 
 	"github.com/stretchr/testify/mock"
 )
 
 const ID int64 = 0
-const solution common_types.Solution = 10
-const actionTag string = common_types.Fight
+
+const agentSolutionValue = 10
+
+// TODO make it const
+var agentSolution = solution.NewIntSolution(agentSolutionValue)
+
+const agentFitness = agentSolutionValue
+
+const actionTag string = common.Fight
 const energy int = 50
 
 type MockTagCalculator struct {
@@ -28,9 +36,11 @@ func mockGetAgentByTagEmpty(tag string) (i_agent.IAgent, error) {
 
 func mockGetAgentByTag(tag string) (i_agent.IAgent, error) {
 	rivalID := ID + 1
-	rivalSolution := solution + 10
-	rival := agent.NewAgent(rivalID, rivalSolution, actionTag, energy, MockTagCalculator{common_types.Fight},
-		&MockAgentComparator{}, &MockRandomizer{}, mockGetAgentByTagEmpty, mockDeleteAgent, mockAddAgent)
+	rivalSolution := solution.NewIntSolution(agentSolution.Solution() + 10)
+	mockFitnessCalculator := &MockFitnessCalculator{}
+	mockFitnessCalculator.On("CalculateFitness").Return(agentFitness).Once()
+	rival := agent.NewAgent(rivalID, rivalSolution, actionTag, energy, MockTagCalculator{common.Fight},
+		&MockAgentComparator{}, &MockRandomizer{}, mockGetAgentByTagEmpty, mockDeleteAgent, mockAddAgent, mockFitnessCalculator)
 	return rival, nil
 }
 
@@ -57,8 +67,10 @@ func expectFight(t *testing.T, sut i_agent.IAgent, expectedEnergyAfterFight int)
 }
 
 func TestAgent(t *testing.T) {
-	sut := agent.NewAgent(ID, solution, actionTag, energy, MockTagCalculator{common_types.Fight}, &MockAgentComparator{},
-		&MockRandomizer{}, mockGetAgentByTag, mockDeleteAgent, mockAddAgent)
+	mockFitnessCalculator := &MockFitnessCalculator{}
+	mockFitnessCalculator.On("CalculateFitness").Return(agentFitness)
+	sut := agent.NewAgent(ID, agentSolution, actionTag, energy, MockTagCalculator{common.Fight}, &MockAgentComparator{},
+		&MockRandomizer{}, mockGetAgentByTag, mockDeleteAgent, mockAddAgent, mockFitnessCalculator)
 
 	t.Run("Test modifying energy", func(t *testing.T) {
 		testParams := []struct {
@@ -84,8 +96,8 @@ func TestAgent(t *testing.T) {
 		agentComparator := new(MockAgentComparator)
 		// TODO improve expectation - remove Once and specify Compare() arguments
 		agentComparator.On("Compare").Return(false).Once()
-		sut := agent.NewAgent(ID, solution, actionTag, energy, MockTagCalculator{common_types.Fight}, agentComparator,
-			&MockRandomizer{}, mockGetAgentByTag, mockDeleteAgent, mockAddAgent)
+		sut := agent.NewAgent(ID, agentSolution, actionTag, energy, MockTagCalculator{common.Fight}, agentComparator,
+			&MockRandomizer{}, mockGetAgentByTag, mockDeleteAgent, mockAddAgent, mockFitnessCalculator)
 
 		sut.Execute()
 		expectFight(t, sut, 30)
@@ -94,7 +106,6 @@ func TestAgent(t *testing.T) {
 		sut.Execute()
 		expectFight(t, sut, 50)
 	})
-
 }
 
 func expectAgentDeath(t *testing.T, agent i_agent.IAgent) {
@@ -105,8 +116,10 @@ func expectAgentDeath(t *testing.T, agent i_agent.IAgent) {
 }
 
 func TestAgentGoingToDie(t *testing.T) {
-	sut := agent.NewAgent(ID, solution, common_types.Death, energy, MockTagCalculator{common_types.Death}, &MockAgentComparator{},
-		&MockRandomizer{}, mockGetAgentByTag, mockDeleteAgent, mockAddAgent)
+	mockFitnessCalculator := &MockFitnessCalculator{}
+	mockFitnessCalculator.On("CalculateFitness").Return(agentFitness)
+	sut := agent.NewAgent(ID, agentSolution, common.Death, energy, MockTagCalculator{common.Death}, &MockAgentComparator{},
+		&MockRandomizer{}, mockGetAgentByTag, mockDeleteAgent, mockAddAgent, mockFitnessCalculator)
 	t.Run("Test death", func(t *testing.T) {
 		sut.Execute()
 		expectAgentDeath(t, sut)
@@ -128,8 +141,10 @@ func TestAgentGoingToReproduce(t *testing.T) {
 	var energy int = 80
 	randomizer := new(MockRandomizer)
 	randomizer.On("RandInt", mock.Anything, mock.Anything).Return(2)
-	sut := agent.NewAgent(ID, solution, common_types.Reproduction, energy, MockTagCalculator{common_types.Reproduction}, &MockAgentComparator{},
-		randomizer, mockGetAgentByTag, mockDeleteAgent, mockAddAgent)
+	mockFitnessCalculator := &MockFitnessCalculator{}
+	mockFitnessCalculator.On("CalculateFitness").Return(agentFitness)
+	sut := agent.NewAgent(ID, agentSolution, common.Reproduction, energy, MockTagCalculator{common.Reproduction}, &MockAgentComparator{},
+		randomizer, mockGetAgentByTag, mockDeleteAgent, mockAddAgent, mockFitnessCalculator)
 	t.Run("Test mutation", func(t *testing.T) {
 		sut.Execute()
 		var expectedEnergyAfterMutation int = 40

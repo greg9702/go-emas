@@ -2,13 +2,16 @@ package environment
 
 import (
 	"errors"
-	"go-emas/pkg/common_types"
+	"go-emas/pkg/common"
 	"go-emas/pkg/i_agent"
 	"go-emas/pkg/logger"
 	"go-emas/pkg/population_factory"
 	"go-emas/pkg/randomizer"
 	"go-emas/pkg/stopper"
+	"go-emas/pkg/top_fitness_observer"
 	"strconv"
+	"sync"
+	"time"
 )
 
 // IEnvironment interface for environments
@@ -27,24 +30,28 @@ type Environment struct {
 	agentsBeforeActions map[string][]i_agent.IAgent
 	stopper             stopper.IStopper
 	randomizer          randomizer.IRandomizer
+	topFitnessObserver  top_fitness_observer.ITopFitnessObserver
 }
 
 // NewEnvironment creates new Environment object
 func NewEnvironment(populationSize int,
 	populationFactory population_factory.IPopulationFactory,
 	stopper stopper.IStopper,
-	randomizer randomizer.IRandomizer) (*Environment, error) {
+	randomizer randomizer.IRandomizer,
+	topFitnessObserver top_fitness_observer.ITopFitnessObserver) (*Environment, error) {
 
 	var e = Environment{
-		population: make(map[int64]i_agent.IAgent),
-		stopper:    stopper,
-		randomizer: randomizer,
+		population:         make(map[int64]i_agent.IAgent),
+		stopper:            stopper,
+		randomizer:         randomizer,
+		topFitnessObserver: topFitnessObserver,
 	}
 
 	population, err := populationFactory.CreatePopulation(populationSize,
 		e.GetAgentByTag,
 		e.DeleteFromPopulation,
-		e.AddToPopulation)
+		e.AddToPopulation,
+		e.topFitnessObserver)
 
 	if err != nil {
 		return nil, err
@@ -61,6 +68,8 @@ func (e *Environment) Start() error {
 	var i int = 0
 
 	for {
+		start := time.Now()
+
 		logger.BaseLog().Info("############ Iteration number: " + strconv.Itoa(i) + " ############")
 
 		logger.BaseLog().Debug("--------------------------")
@@ -76,14 +85,22 @@ func (e *Environment) Start() error {
 		e.TagAgents()
 		e.executeActions()
 
-		if e.stopper.Stop(i) {
+		if e.stopper.Stop() {
 			logger.BaseLog().Info("Stop condition met")
 			break
 		}
 		i++
+		elapsed := time.Since(start)
+
+		logger.BaseLog().Debug("Iteration execution time: " + elapsed.String())
+
 		// used to run step by step
 		// _, _ = bufio.NewReader(os.Stdin).ReadString('\n')
 	}
+
+	logger.BaseLog().Debug("--------------------------")
+	logger.BaseLog().Debug("After completing all iterations: ")
+	e.ShowMap()
 
 	return nil
 }
@@ -130,6 +147,7 @@ func (e *Environment) AddToPopulation(agent i_agent.IAgent) error {
 		return errors.New("Element with " + strconv.FormatInt(agent.ID(), 10) + " id already exists")
 	}
 	e.population[agent.ID()] = agent
+	e.topFitnessObserver.Update(agent)
 	return nil
 }
 
@@ -144,17 +162,32 @@ func (e *Environment) ShowMap() {
 
 // TagAgents each agent tags itself. Then all agents are marked to perform actions
 func (e *Environment) TagAgents() {
-	for _, agent := range e.population {
-		agent.Tag()
-	}
+
 	e.agentsBeforeActions = make(map[string][]i_agent.IAgent)
+
+	var lock = sync.RWMutex{}
+	var wg sync.WaitGroup
+
 	for _, agent := range e.population {
-		e.agentsBeforeActions[agent.ActionTag()] = append(e.agentsBeforeActions[agent.ActionTag()], agent)
+
+		agentToProcess := agent
+		wg.Add(1)
+
+		go func() {
+			agentToProcess.Tag()
+
+			lock.Lock()
+			e.agentsBeforeActions[agentToProcess.ActionTag()] = append(e.agentsBeforeActions[agentToProcess.ActionTag()], agentToProcess)
+			lock.Unlock()
+
+			wg.Done()
+		}()
 	}
+	wg.Wait()
 }
 
 func (e *Environment) executeActions() {
-	actions := []string{common_types.Death, common_types.Reproduction, common_types.Fight}
+	actions := []string{common.Death, common.Reproduction, common.Fight}
 	for _, action := range actions {
 		for len(e.agentsBeforeActions[action]) > 0 {
 			currentExecutor := e.agentsBeforeActions[action][0]

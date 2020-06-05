@@ -1,6 +1,6 @@
 package tag_calculator
 
-import "go-emas/pkg/common_types"
+import "go-emas/pkg/common"
 
 const reproductionTreshold = 80
 
@@ -26,9 +26,9 @@ func NewTagCalculator() *TagCalculator {
 // Calculate is used to calculate action for passed energy value
 func (tc *TagCalculator) Calculate(energy int) string {
 	if energy == 0 {
-		return common_types.Death
+		return common.Death
 	} else if energy >= reproductionTreshold {
-		return common_types.Reproduction
+		return common.Reproduction
 	}
-	return common_types.Fight
+	return common.Fight
 }

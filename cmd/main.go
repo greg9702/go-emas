@@ -8,6 +8,7 @@ import (
 	"go-emas/pkg/population_factory"
 	"go-emas/pkg/randomizer"
 	"go-emas/pkg/stopper"
+	"go-emas/pkg/top_fitness_observer"
 	"os"
 )
 
@@ -37,7 +38,8 @@ func main() {
 	logger.BaseLog().InitLogger(*logLevel, lf)
 
 	var populationFactory = population_factory.NewBasicPopulationFactroy()
-	env, err := environment.NewEnvironment(populationSize, populationFactory, stopper.NewIterationBasedStopper(), randomizer.BaseRand())
+	var topFitnessObserver = top_fitness_observer.NewTopFitnessObserver()
+	env, err := environment.NewEnvironment(populationSize, populationFactory, stopper.NewIterationBasedStopper(), randomizer.BaseRand(), topFitnessObserver)
 
 	if err != nil {
 		panic("Environment setup error")

@@ -1,11 +1,12 @@
 package i_agent
 
-import "go-emas/pkg/common_types"
+import "go-emas/pkg/solution"
 
 // IAgent is an interface for agents
 type IAgent interface {
 	ID() int64
-	Solution() common_types.Solution
+	Solution() solution.ISolution
+	Fitness() int
 	ActionTag() string
 	Energy() int
 	ModifyEnergy(energyDelta int)

@@ -1,7 +1,7 @@
 package test
 
 import (
-	"go-emas/pkg/common_types"
+	"go-emas/pkg/solution"
 
 	"github.com/stretchr/testify/mock"
 )
@@ -20,10 +20,15 @@ func (m *MockAgent) SetID(id int64) {
 	m.Called()
 }
 
-func (m *MockAgent) Solution() common_types.Solution {
+// This mock works only for int solutions - for another types inheritance is needed
+func (m *MockAgent) Solution() solution.ISolution {
 	args := m.Called()
-	// TODO this mock can be not sufficient if solution ever changes
-	return common_types.Solution(args.Int(0))
+	return solution.NewIntSolution(args.Int(0))
+}
+
+func (m *MockAgent) Fitness() int {
+	args := m.Called()
+	return args.Int(0)
 }
 
 func (m *MockAgent) ActionTag() string {

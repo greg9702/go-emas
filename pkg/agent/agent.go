@@ -1,18 +1,17 @@
 package agent
 
 import (
-	"go-emas/pkg/common_types"
+	"go-emas/pkg/common"
 	"go-emas/pkg/comparator"
+	"go-emas/pkg/fitness_calculator"
 	"go-emas/pkg/i_agent"
 	"go-emas/pkg/logger"
 	"go-emas/pkg/randomizer"
+	"go-emas/pkg/solution"
 	"go-emas/pkg/tag_calculator"
 
 	"strconv"
 )
-
-const lossPenalty int = 20
-const mutationRate float32 = 0.5
 
 // percent of current parent energy passed to a child as inital energy value
 const energyPercentageToChild float32 = 0.5
@@ -20,11 +19,13 @@ const energyPercentageToChild float32 = 0.5
 // Agent struct represent an Agent
 type Agent struct {
 	id                    int64
-	solution              common_types.Solution
+	solution              solution.ISolution
+	fitness               int
 	actionTag             string
 	energy                int
 	tagCalculator         tag_calculator.ITagCalulator
 	agentComparator       comparator.IAgentComparator
+	fitnessCalculator     fitness_calculator.IFitnessCalculator
 	randomizer            randomizer.IRandomizer
 	getAgentByTagCallback func(tag string) (i_agent.IAgent, error)
 	deleteAgentCallback   func(id int64) error
@@ -34,15 +35,17 @@ type Agent struct {
 // NewAgent creates new Agent object
 func NewAgent(
 	id int64,
-	solution common_types.Solution,
+	solution solution.ISolution,
 	actionTag string, energy int,
 	tagCalculator tag_calculator.ITagCalulator,
 	agentComparator comparator.IAgentComparator,
 	randomizer randomizer.IRandomizer,
 	getAgentByTagCallback func(tag string) (i_agent.IAgent, error),
 	deleteAgentCallback func(id int64) error,
-	addAgentCallback func(newAgent i_agent.IAgent) error) i_agent.IAgent {
-	a := Agent{id, solution, actionTag, energy, tagCalculator, agentComparator, randomizer, getAgentByTagCallback, deleteAgentCallback, addAgentCallback}
+	addAgentCallback func(newAgent i_agent.IAgent) error,
+	fitnessCalculator fitness_calculator.IFitnessCalculator) i_agent.IAgent {
+	fitness := fitnessCalculator.CalculateFitness(solution)
+	a := Agent{id, solution, fitness, actionTag, energy, tagCalculator, agentComparator, fitnessCalculator, randomizer, getAgentByTagCallback, deleteAgentCallback, addAgentCallback}
 	return &a
 }
 
@@ -57,8 +60,12 @@ func (a *Agent) SetID(id int64) {
 }
 
 // Solution returns agent solution
-func (a *Agent) Solution() common_types.Solution {
+func (a *Agent) Solution() solution.ISolution {
 	return a.solution
+}
+
+func (a *Agent) Fitness() int {
+	return a.fitness
 }
 
 // ActionTag returns agent tag
@@ -73,7 +80,7 @@ func (a *Agent) Energy() int {
 
 // String used to display agent struct using fmt
 func (a *Agent) String() string {
-	return "Agent [" + strconv.Itoa(int(a.id)) + "] solution: " + strconv.Itoa(int(a.solution)) + " energy: " + strconv.Itoa(a.energy)
+	return "Agent [" + strconv.Itoa(int(a.id)) + "] " + a.solution.String() + " fitness: " + strconv.Itoa(a.Fitness()) + " energy: " + strconv.Itoa(a.energy)
 }
 
 // ModifyEnergy is used to modify agent energy
@@ -103,7 +110,7 @@ func (a *Agent) Execute() {
 
 // Fight is used to perform fight action
 func (a *Agent) fight() {
-	rival, err := a.getAgentByTagCallback(common_types.Fight)
+	rival, err := a.getAgentByTagCallback(common.Fight)
 
 	if err != nil {
 		logger.BaseLog().Debug("[Figth] Agent [" + strconv.Itoa(int(a.id)) + "] there is no rival for him")
@@ -115,35 +122,35 @@ func (a *Agent) fight() {
 
 	if won {
 		result = "1:0"
-		a.ModifyEnergy(lossPenalty)
-		rival.ModifyEnergy(-lossPenalty)
+		a.ModifyEnergy(common.LossPenalty)
+		rival.ModifyEnergy(-common.LossPenalty)
 	} else {
 		result = "0:1"
-		a.ModifyEnergy(-lossPenalty)
-		rival.ModifyEnergy(lossPenalty)
+		a.ModifyEnergy(-common.LossPenalty)
+		rival.ModifyEnergy(common.LossPenalty)
 	}
-	logger.BaseLog().Debug("[Figth] Agent [" + strconv.Itoa(int(a.id)) + "] vs Agnet [" + strconv.Itoa(int(rival.ID())) + "] result: " + result)
+	logger.BaseLog().Debug("[Figth] Agent [" + strconv.Itoa(int(a.id)) + "] vs Agent [" + strconv.Itoa(int(rival.ID())) + "] result: " + result)
 }
 
 // Reproduce is used to perform fight action
 func (a *Agent) reproduce() {
 	var newAgentID int64
 
-	solutionDelta, _ := a.randomizer.RandInt(-int(float32(a.solution)*mutationRate), int(float32(a.solution)*mutationRate))
-	var newAgentSolution common_types.Solution = a.solution + common_types.Solution(solutionDelta)
+	newAgentSolution := a.solution.Mutate()
 
 	var newAgentEnergy int = int(float32(a.energy) * energyPercentageToChild) // TODO this must be int!
 
 	child := NewAgent(newAgentID,
 		newAgentSolution,
-		common_types.Fight,
+		common.Fight,
 		newAgentEnergy,
 		a.tagCalculator,
 		a.agentComparator,
 		a.randomizer,
 		a.getAgentByTagCallback,
 		a.deleteAgentCallback,
-		a.addAgentCallback)
+		a.addAgentCallback,
+		a.fitnessCalculator)
 
 	a.addAgentCallback(child)
 	a.ModifyEnergy(-newAgentEnergy)
